@@ -25,6 +25,20 @@ module.exports = (sequelize, DataTypes) => {
           }
         }
       },
+      first_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isAlpha: true
+        }
+      },
+      last_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isAlpha: true
+        }
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -51,7 +65,8 @@ module.exports = (sequelize, DataTypes) => {
           //exclude these attributes
           exclude: ["hashedPassword", "email", "createdAt", "updatedAt"]
         }
-      }
+      },
+      validate: true
     }
   );
   return User;
