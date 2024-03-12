@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
+          //username must be between 4 to 30 characters
           len: [4, 30],
           isNotEmail(value) {
             if (Validator.isEmail(value)) {
@@ -29,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
+          //email must be between 3 to 256 characters
           len: [3, 256],
           isEmail: true
         }
@@ -37,12 +39,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING.BINARY,
         allowNull: false,
         validate: {
+          //require 60 characters
           len: [60, 60]
         }
       }
     }, {
       sequelize,
-      modelName: 'User'
+      modelName: 'User',
+      defaultScope: {
+        attributes: {
+          //exclude these attributes
+          exclude: ["hashedPassword", "email", "createdAt", "updatedAt"]
+        }
+      }
     }
   );
   return User;
