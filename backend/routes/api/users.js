@@ -53,9 +53,9 @@ router.post('/', validateSignup, async (req, res) => {
       //use setTokenCookie to log in the user by creating a JWT cookie with the user's non-sensitive information as its payload
       const safeUser = {
         id: user.id,
-        email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        email: user.email,
         username: user.username,
       };
 
