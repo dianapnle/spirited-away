@@ -2,12 +2,28 @@
 const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
-
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const router = express.Router();
 
-router.post('/', async (req, res, next) => {
+//Validate Logins
+//The validateLogin middleware is composed of the check and handleValidationErrors middleware. It checks to see whether or not req.body.credential and req.body.password are empty.
+//If one of them is empty, then an error will be returned as the response.
+const validateLogin = [
+    check('credential')
+      .exists({ checkFalsy: true })
+      .notEmpty()
+      .withMessage('Please provide a valid email or username.'),
+    check('password')
+      .exists({ checkFalsy: true })
+      .withMessage('Please provide a password.'),
+    handleValidationErrors
+  ];
+
+// Log in
+router.post('/', validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
     //query for the user identified by the provided credential (which can be either a username or email).
     //unscoped() removes the default scope so that you can read all the attributes including hashedPassword
@@ -72,6 +88,8 @@ router.get(
       return res.json({ message: 'success' });
     }
   );
+
+
 
 
 
