@@ -22,39 +22,61 @@ module.exports = (sequelize, DataTypes) => {
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      isAlphanumeric: true
     },
     city: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      isAlpha: true
     },
     state: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      isAlpha: true
     },
     country: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      isAlpha: true
     },
     lat: {
       type: DataTypes.FLOAT,
-      allowNull: false
+      allowNull: false,
+      isNumeric: true,
+      validate: {
+        min: {args: -90, msg: "Latitude must be within -90 and 90"},
+        max: {args: 90, msg: 'Latitude must be within -90 and 90'}
+      }
     },
     lng: {
       type: DataTypes.FLOAT,
-      allowNull: false
+      allowNull: false,
+      isNumeric: true,
+      validate: {
+        min: {args: -180, msg: "Longitude must be within -180 and 180"},
+        max: {args: 180, msg: 'Longitude must be within -180 and 180'}
+      }
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
-    },
+      allowNull: false,
+      isAlpha: true,
+      validate: {
+        len: {args:[0,49], msg: "Name must be less than 50 characters"}
+    }
+  },
     description: {
       type: DataTypes.TEXT,
       allowNull: false
     },
     price: {
       type: DataTypes.DECIMAL,
-      allowNull: false
+      allowNull: false,
+      isNumeric: true,
+      validate: {
+        min: {args: "0.0", msg: "Price per day must be positive"}
+      }
     }
   }, {
     sequelize,

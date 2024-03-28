@@ -5,8 +5,9 @@ const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-
+require('express-async-errors');
 const router = express.Router();
+const app = express();
 
 
 //The validateSignup middleware is composed of the check and handleValidationErrors middleware
@@ -44,6 +45,52 @@ const validateSignup = [
 router.post('/', validateSignup, async (req, res) => {
     //extract email, password, and username from body
       const { email, password, firstName, lastName, username } = req.body;
+    //check if email or username already exists in the datatbase, if it does, throw error
+    const whereuser = {};
+    const whereemail = {};
+
+    if (username) {
+      whereuser.username=username;
+      const search = await User.findAll({
+        where: whereuser
+      }
+    );
+
+      if (search.length !== 0) {
+        const err = new Error()
+        err.message = "User already exists";
+        err.errors = {
+          username: "User with that username already exists"
+        };
+        res.status(500);
+        console.log(whereuser, search.length)
+        return res.json({
+          message: err.message,
+          errors: err.errors,
+        })
+      }
+    };
+
+    if (email) {
+      whereemail.email=email;
+      const search = await User.findAll({
+        where: whereemail
+    });
+
+    if (search.length !== 0) {
+      const err = new Error()
+      err.message = "User already exists";
+      err.errors = {
+        email: "User with that email already exists"
+      };
+      res.status(500);
+      return res.json({
+        message: err.message,
+        errors: err.errors,
+    })
+    }
+    };
+
       //then use bcrypt.hashsync to hash the user's provided password
       const hashedPassword = bcrypt.hashSync(password);
       //create a new User in the database with the username and email from the request body and the hashedPassword generated from bcryptjs
@@ -65,7 +112,7 @@ router.post('/', validateSignup, async (req, res) => {
         user: safeUser
       });
     }
-  );
+);
 
 
 module.exports = router;
