@@ -117,7 +117,8 @@ router.put("/:spotId", requireAuth, validateSpot, validateUser, async (req, res)
   const spotId = req.params.spotId;
   let result = await Spot.findByPk(Number(spotId));
 
-  result = ({
+   await result.update({
+    id: spotId,
     ownerId: req.user.id,
     address: address,
     city: city,
@@ -127,10 +128,25 @@ router.put("/:spotId", requireAuth, validateSpot, validateUser, async (req, res)
     lng: lng,
     name: name,
     description: description,
-    price: price
+    price: price,
+    createdAt: result.createdAt,
+    updatedAt: result.updatedAt
   })
   return res.json(result);
 
 })
 
+//delete a spot
+router.delete("/:spotId", requireAuth, validateUser, async (req, res) => {
+  //use param spot id to look for the spot
+  const spotId = req.params.spotId;
+  await Spot.destroy({
+    where: {id: spotId}
+  })
+
+  return res.json({
+    message:"Successfully deleted"
+    });
+
+})
 module.exports = router;
