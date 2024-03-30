@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    imageUrl: {
+    url: {
       type: DataTypes.TEXT,
       allowNull: false
     },

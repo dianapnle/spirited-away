@@ -1,11 +1,29 @@
-//holds route paths to /api/session
+//holds route paths to /api/spots
 const express = require('express');
 const { Op } = require('sequelize');
 const { Spot, SpotImage, User } = require('../../db/models');
-const { setTokenCookie, requireAuth } = require('../../utils/auth');
+const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+
+//validate if spot exists
+async function spotExist (req, res, next) {
+    //use param spot id to look for the spot
+    const spotId = req.params.spotId;
+
+    const search = await Spot.findByPk(Number(spotId));
+    //if there is no spot that matches the given spotid from parameter -> throw an error
+    if (search === null) {
+      const err = new Error();
+      err.message = "Spot couldn't be found";
+      err.status = 404;
+      return next(err);
+    };
+
+    return next()
+}
+
 
 //authorize user
 async function validateUser (req, res, next) {
@@ -72,7 +90,7 @@ const validateSpot = [
         attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
         'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt'],
         include: { model: SpotImage,
-          attributes: ['imageUrl'],
+          attributes: ['url'],
           where: {
             preview: true
           },
@@ -85,7 +103,7 @@ const validateSpot = [
      const modifiedEntry = entry.toJSON();
      //if images for the spot exist then ->
      if (modifiedEntry.SpotImages.length !== 0) {
-       modifiedEntry.previewImage = modifiedEntry.SpotImages[0].imageUrl
+       modifiedEntry.previewImage = modifiedEntry.SpotImages[0].url
        delete modifiedEntry.SpotImages
        modifiedResult.push(modifiedEntry);
      } else if (modifiedEntry.SpotImages.length === 0){
@@ -109,7 +127,7 @@ const validateSpot = [
       attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
       'lng', 'name', 'description', 'price'],
       include: { model: SpotImage,
-        attributes: ['imageUrl'],
+        attributes: ['url'],
         where: {
           preview: true
         },
@@ -123,7 +141,7 @@ const validateSpot = [
    //if images for the spot exist then ->
    if (modifiedEntry.SpotImages.length !== 0) {
     // unbox first SpotImage as preview image, if available
-     modifiedEntry.previewImage = modifiedEntry.SpotImages[0].imageUrl
+     modifiedEntry.previewImage = modifiedEntry.SpotImages[0].url
      delete modifiedEntry.SpotImages
      modifiedResult.push(modifiedEntry);
    } else if (modifiedEntry.SpotImages.length === 0){
@@ -138,14 +156,15 @@ const validateSpot = [
 
 
     // get details of a spot from an id
-    router.get('/:spotId', async (req, res) => {
+    router.get('/:spotId', spotExist, async (req, res) => {
+      //use param spot id to look for the spot
       const { spotId } = req.params;
       const spot = await Spot.findByPk(spotId,
       {
         attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
         'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt'],
         include: [
-          { model: SpotImage, attributes: ['id', 'imageUrl', 'preview']},
+          { model: SpotImage, attributes: ['id', 'url', 'preview']},
           { model: User, as: "Owner", attributes: ['id', 'firstName', 'lastName']}
       ]})
         return res.json(spot);
@@ -171,7 +190,7 @@ router.post('/', requireAuth, validateSpot, async (req, res) => {
       price: price
     })
     return res.json(spot);
-})
+});
 
 
 
@@ -213,5 +232,27 @@ router.delete("/:spotId", requireAuth, validateUser, async (req, res) => {
     message:"Successfully deleted"
     });
 
-})
+});
+
+
+//add an image to a spot
+router.post('/:spotId/images', requireAuth, validateUser, async (req, res) => {
+  const { url, preview } = req.body
+  const spotId = req.params.spotId;
+  const image = await SpotImage.create({
+    spotId: spotId,
+    url: url,
+    preview: preview
+  })
+
+  return res.json(
+  {
+    id: image.id,
+    url: image.url,
+    preview: image.preview
+  });
+});
+
+
+
 module.exports = router;
