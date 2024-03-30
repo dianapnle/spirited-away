@@ -1,89 +1,11 @@
 //holds route paths to /api/session
 const express = require('express');
 const { Op } = require('sequelize');
-const { Spot } = require('../../db/models');
+const { Spot, SpotImage, User } = require('../../db/models');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-
-
-  // get spots
-  // router.get('/', (req, res) => {
-  //   const { address, city, state, country, lat, lng, name, description, price } = req.body
-  //       const spot = {
-  //         address: address,
-  //         city: city,
-  //         state: state,
-  //         country: country,
-  //         lat: lat,
-  //         lng: lng,
-  //         name: name,
-  //         description: description,
-  //         price: price
-  //       }
-  //       return res.json({
-  //         spot
-  //       });
-
-  //      return res.json({ user: null });
-
-  //   });
-
-
-// The validateSignup middleware is composed of the check and handleValidationErrors middleware
-//   If at least one of the req.body values fail the check, an error will be returned as the response.
-const validateSpot = [
-    //It checks to see if there is an address, etc
-    check('address')
-    .exists({ checkFalsy: true })
-    .withMessage('Street address is required'),
-    check('city')
-    .exists({ checkFalsy: true })
-    .withMessage('City is required'),
-    check('state')
-    .exists({ checkFalsy: true })
-    .withMessage('State is required'),
-    check('country')
-    .exists({ checkFalsy: true })
-    .withMessage('Country is required'),
-    check('lat')
-    .exists({ checkFalsy: true })
-    .withMessage('Latitude must be within -90 and 90'),
-    check('lng')
-    .exists({ checkFalsy: true })
-    .withMessage('Longitude must be within -180 and 180'),
-    check('name')
-    .exists({ checkFalsy: true })
-    .withMessage('Name must be less than 50 characters'),
-    check('description')
-    .exists({ checkFalsy: true })
-    .withMessage('Description is required'),
-    check('price')
-    .exists({ checkFalsy: true })
-    .withMessage('Price per day must be a positive number'),
-    handleValidationErrors
-];
-
-
-//create a spot
-router.post('/', requireAuth, validateSpot, async (req, res) => {
-    const { address, city, state, country, lat, lng, name, description, price } = req.body;
-
-    const spot = await Spot.create({
-      ownerId: req.user.id,
-      address: address,
-      city: city,
-      state: state,
-      country: country,
-      lat: lat,
-      lng: lng,
-      name: name,
-      description: description,
-      price: price
-    })
-    return res.json(spot);
-})
 
 //authorize user
 async function validateUser (req, res, next) {
@@ -107,8 +29,151 @@ async function validateUser (req, res, next) {
     err.errors = { message: 'Authorization required' };
     err.status = 403;
     return next(err);
+  };
+
+
+// The validateSignup middleware is composed of the check and handleValidationErrors middleware
+//   If at least one of the req.body values fail the check, an error will be returned as the response.
+const validateSpot = [
+  //It checks to see if there is an address, etc
+  check('address')
+  .exists({ checkFalsy: true })
+  .withMessage('Street address is required'),
+  check('city')
+  .exists({ checkFalsy: true })
+  .withMessage('City is required'),
+  check('state')
+  .exists({ checkFalsy: true })
+  .withMessage('State is required'),
+  check('country')
+  .exists({ checkFalsy: true })
+  .withMessage('Country is required'),
+  check('lat')
+  .exists({ checkFalsy: true })
+  .withMessage('Latitude must be within -90 and 90'),
+  check('lng')
+  .exists({ checkFalsy: true })
+  .withMessage('Longitude must be within -180 and 180'),
+  check('name')
+  .exists({ checkFalsy: true })
+  .withMessage('Name must be less than 50 characters'),
+  check('description')
+  .exists({ checkFalsy: true })
+  .withMessage('Description is required'),
+  check('price')
+  .exists({ checkFalsy: true })
+  .withMessage('Price per day must be a positive number'),
+  handleValidationErrors
+];
+
+    // get all spots
+    router.get('/', async (req, res) => {
+      const spots = await Spot.findAll({
+        attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
+        'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt'],
+        include: { model: SpotImage,
+          attributes: ['imageUrl'],
+          where: {
+            preview: true
+          },
+          required: false
+        }
+      });
+
+    const modifiedResult = []
+    for (const entry of spots) {
+     const modifiedEntry = entry.toJSON();
+     //if images for the spot exist then ->
+     if (modifiedEntry.SpotImages.length !== 0) {
+       modifiedEntry.previewImage = modifiedEntry.SpotImages[0].imageUrl
+       delete modifiedEntry.SpotImages
+       modifiedResult.push(modifiedEntry);
+     } else if (modifiedEntry.SpotImages.length === 0){
+       delete modifiedEntry.SpotImages
+     modifiedResult.push(modifiedEntry)
+    }
   }
-;
+      return res.json({
+        Spots:  modifiedResult
+      });
+    });
+
+
+
+  // get spots by current user
+  router.get('/current', requireAuth, async (req, res) => {
+    const spots = await Spot.findAll({
+      where: {
+          ownerId: req.user.id
+      },
+      attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
+      'lng', 'name', 'description', 'price'],
+      include: { model: SpotImage,
+        attributes: ['imageUrl'],
+        where: {
+          preview: true
+        },
+        required: false
+      }
+    });
+
+  const modifiedResult = []
+  for (const entry of spots) {
+   const modifiedEntry = entry.toJSON();
+   //if images for the spot exist then ->
+   if (modifiedEntry.SpotImages.length !== 0) {
+    // unbox first SpotImage as preview image, if available
+     modifiedEntry.previewImage = modifiedEntry.SpotImages[0].imageUrl
+     delete modifiedEntry.SpotImages
+     modifiedResult.push(modifiedEntry);
+   } else if (modifiedEntry.SpotImages.length === 0){
+       // always remove SpotImages implementation detail from user
+   delete modifiedEntry.SpotImages
+   modifiedResult.push(modifiedEntry)}
+}
+    return res.json({
+      Spots:  modifiedResult
+    });
+  });
+
+
+    // get details of a spot from an id
+    router.get('/:spotId', async (req, res) => {
+      const { spotId } = req.params;
+      const spot = await Spot.findByPk(spotId,
+      {
+        attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
+        'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt'],
+        include: [
+          { model: SpotImage, attributes: ['id', 'imageUrl', 'preview']},
+          { model: User, as: "Owner", attributes: ['id', 'firstName', 'lastName']}
+      ]})
+        return res.json(spot);
+    });
+
+
+
+
+//create a spot
+router.post('/', requireAuth, validateSpot, async (req, res) => {
+    const { address, city, state, country, lat, lng, name, description, price } = req.body;
+
+    const spot = await Spot.create({
+      ownerId: req.user.id,
+      address: address,
+      city: city,
+      state: state,
+      country: country,
+      lat: lat,
+      lng: lng,
+      name: name,
+      description: description,
+      price: price
+    })
+    return res.json(spot);
+})
+
+
 
 //edit a spot
 router.put("/:spotId", requireAuth, validateSpot, validateUser, async (req, res) => {
