@@ -1,7 +1,7 @@
 //holds route paths to /api/spots
 const express = require('express');
 const { Op } = require('sequelize');
-const { Spot, SpotImage, User } = require('../../db/models');
+const { Spot, SpotImage, User, Review } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 const { check } = require('express-validator');
@@ -251,6 +251,60 @@ router.post('/:spotId/images', requireAuth, validateUser, async (req, res) => {
     url: image.url,
     preview: image.preview
   });
+});
+
+
+// The validateSignup middleware is composed of the check and handleValidationErrors middleware
+//   If at least one of the req.body values fail the check, an error will be returned as the response.
+const validateReview = [
+  //It checks to see if there is an address, etc
+  check('review')
+  .exists({ checkFalsy: true })
+  .withMessage('Review text is required'),
+  check('stars')
+  .exists({ checkFalsy: true })
+  .withMessage('Stars must be an integer from 1 to 5'),
+  handleValidationErrors
+];
+
+async function checkExist (req, res, next) {
+    //use param spot id to look for the spot
+    const spotId = req.params.spotId;
+
+    const search = await Spot.findByPk(Number(spotId));
+    //if there is no spot that matches the given spotid from parameter -> throw an error
+    if (search === null) {
+      const err = new Error();
+      err.message = "Spot couldn't be found";
+      err.status = 404;
+      return next(err);
+    };
+    //use the spotId to pull the review's userid to check if it matches with req.user
+    const result = await Review.findByPk(spotId)
+    //if it does match -> throw an error
+    if (req.user.id === result.userId) {
+      const err = new Error('User already has a review for this spot');
+      err.title = 'Already exists';
+      err.status = 500;
+      return next(err);
+    }
+
+    return next();
+}
+
+//create a review for a post based on spot's id
+router.post('/:spotId/reviews', requireAuth, validateReview, checkExist, async (req, res) => {
+  const spotId = req.params.spotId;
+  const {review, stars} = req.body;
+
+  const newReview = await Review.create({
+    userId: req.user.id,
+    spotId: spotId,
+    review: review,
+    stars: stars,
+  })
+  res.status(201);
+  return res.json(newReview)
 });
 
 
