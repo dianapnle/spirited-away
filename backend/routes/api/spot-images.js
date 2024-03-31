@@ -1,7 +1,7 @@
 //holds route paths to /api/spot-images
 const express = require('express');
 const { Op } = require('sequelize');
-const { SpotImage } = require('../../db/models');
+const { SpotImage, Spot } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 
@@ -19,10 +19,13 @@ async function validateUser (req, res, next) {
         return next(err);
       };
 
-      //authorize
-      if (req.user.id === search.ownerId) {
+      //use the spotId from spot image to pull the owner id to check if it matches with req.user
+      const result = await Spot.findByPk(Number(search.spotId))
+      //if it does match -> continue on to next function
+      if (req.user.id === result.ownerId) {
         return next()
       }
+      //else throw an authorization error
       const err = new Error('Authorization required');
       err.title = 'Authorization required';
       err.errors = { message: 'Authorization required' };
