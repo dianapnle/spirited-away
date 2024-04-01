@@ -32,10 +32,34 @@ async function checkExist (req, res, next) {
     err.status = 404;
     return next(err);
   }
-
 return next();
 };
 
+async function authorize(req, res, next) {
+  const reviewId = req.params.reviewId;
+  const search = await Review.findByPk(Number(reviewId));
+  //if there is no review that matches the given reviewid from parameter -> throw an error
+  if (search === null) {
+      const err = new Error();
+      err.message = "Review couldn't be found";
+      err.status = 404;
+      return next(err);
+  }
+
+  //pull the owner id to check if it matches with req.user
+  //if it does match -> continue on to next function
+  if (req.user.id === search.userId) {
+    return next()
+  };
+
+  //else throw an authorization error
+  const err = new Error('Authorization required');
+  err.title = 'Authorization required';
+  err.errors = { message: 'Authorization required' };
+  err.status = 403;
+
+return next();
+}
 
 router.put("/:reviewId", requireAuth, checkExist, validateReview, async (req, res) => {
   const { review, stars } = req.body;
@@ -56,33 +80,48 @@ router.put("/:reviewId", requireAuth, checkExist, validateReview, async (req, re
 
 })
 
-router.post('/:reviewId/images', requireAuth, async (req, res) => {
-    const { url, preview } = req.body
-    const spotId = req.params.spotId;
-    const image = await ReviewImage.create({
-      spotId: spotId,
-      url: url,
-      preview: preview
-    })
+router.post('/:reviewId/images', requireAuth, authorize, async (req, res) => {
+  const reviewId = req.params.reviewId;
+  const count = await ReviewImage.count();
+  //if there are more than 10 review images, throw an error
+  if (count >= 10) {
+    const err = new Error()
+    err.message = "Maximum number of images for this resource was reached";
+    res.status(403);
+    return res.json({
+      message: err.message
+  })
+  };
 
-    return res.json(
-    {
-      id: image.id,
-      url: image.url,
-      preview: image.preview
-    });
+  const { url } = req.body
+  const image = await ReviewImage.create({
+    reviewId: reviewId,
+    url: url,
+  })
+
+  return res.json(
+  {
+    id: image.id,
+    url: image.url
   });
+});
 
 
-  router.post('/:reviewId', async (req, res) => {
+//delete review
+router.delete('/:reviewId', requireAuth, checkExist, async (req, res) => {
+      //use param review id to look for the review
+      const reviewId = req.params.reviewId;
+       await Review.destroy({
+         where: {id: reviewId}
+          })
 
-  })
+      return res.json({
+           message:"Successfully deleted"
+        });
+
+});
 
 
-
-  router.put('/:reviewId', async (req, res) => {
-
-  })
 
 
 

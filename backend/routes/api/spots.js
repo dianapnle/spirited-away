@@ -280,16 +280,22 @@ async function checkExist (req, res, next) {
       return next(err);
     };
     //use the spotId to pull the review's userid to check if it matches with req.user
-    const result = await Review.findByPk(spotId)
-    //if it does match -> throw an error
-    if (req.user.id === result.userId) {
+    const result = await Review.findOne(
+      {where: {
+        spotId: spotId,
+        userId: req.user.id
+      }} );
+
+
+    //if it does match and its not null-> throw an error
+    if (result) {
       const err = new Error('User already has a review for this spot');
       err.title = 'Already exists';
       err.status = 500;
       return next(err);
     }
 
-    return next();
+    return next()
 }
 
 //create a review for a post based on spot's id
