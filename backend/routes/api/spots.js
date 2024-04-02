@@ -6,6 +6,8 @@ const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+var Sequelize = require('sequelize');
+
 
 //validate if spot exists
 async function spotExist (req, res, next) {
@@ -89,16 +91,21 @@ const validateSpot = [
       const spots = await Spot.findAll({
         attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
         'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt'],
-        include: { model: SpotImage,
-          attributes: ['url'],
-          where: {
-            preview: true
-          },
-          required: false
-        }
+        include: [
+          { model: SpotImage, attributes: ['url'], where: {preview: true}, required: false},
+          { model: Review, attributes: [], required: false}
+        ],
+       attributes: {
+         include: [ // this adds AVG attribute to others instead of rewriting whole body
+        [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating']
+      ]
+       },
+       //separates the average to each spot not overall average otherwise:
+       group: ['Spot.id']
       });
 
-    const modifiedResult = []
+    const modifiedResult = [];
+
     for (const entry of spots) {
      const modifiedEntry = entry.toJSON();
      //if images for the spot exist then ->
@@ -126,13 +133,16 @@ const validateSpot = [
       },
       attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
       'lng', 'name', 'description', 'price'],
-      include: { model: SpotImage,
-        attributes: ['url'],
-        where: {
-          preview: true
-        },
-        required: false
-      }
+      include: [
+        { model: SpotImage, attributes: ['url'], where: { preview: true}, required: false},
+        { model: Review, attributes: [], required: false }
+    ],
+     attributes: {
+      include: [
+     [ Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating' ],
+    ]},
+      //separates the average to each spot not overall average otherwise:
+      group: ['Spot.id']
     });
 
   const modifiedResult = []
@@ -179,7 +189,9 @@ const validateSpot = [
       attributes: ['id', 'userId', 'spotId', 'review', 'stars', 'createdAt', 'updatedAt'],
       include: [
         { model: User, attributes: ['id', 'firstName', 'lastName']},
-        { model: ReviewImage, attributes: ['id', 'url']}
+        { model: ReviewImage, attributes: ['id', 'url']},
+        { model: Review, attributes: [], required: false
+        }
       ]
     });
 
@@ -200,10 +212,23 @@ const validateSpot = [
         include: [
           { model: SpotImage, attributes: ['id', 'url', 'preview']},
           { model: User, as: "Owner", attributes: ['id', 'firstName', 'lastName']}
-      ]})
-        return res.json(spot);
+        ]
     });
+     const modifiedResult = spot.toJSON();
+      const sum = await Review.sum('stars',
+        {where: {spotId: spotId} }
+      )
+      const count = await Review.count('id',
+       { where: {spotId: spotId } }
+      );
 
+      const average = sum/count;
+
+      modifiedResult.numReviews = count;
+      modifiedResult.avgStarRating = average;
+
+        return res.json(modifiedResult);
+    });
 
 
 
