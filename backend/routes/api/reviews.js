@@ -1,7 +1,7 @@
 //holds routes to path /api/reviews
 const express = require('express');
 const { Op } = require('sequelize');
-const { Review, ReviewImage } = require('../../db/models');
+const { Review, ReviewImage, Spot, SpotImage, User } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 const { check } = require('express-validator');
@@ -60,6 +60,47 @@ async function authorize(req, res, next) {
 
 return next();
 }
+
+///////////////////////////////////////////
+    // get all reviews
+    router.get('/current', requireAuth, async (req, res) => {
+      const reviews = await Review.findAll({
+        attributes: ['id', 'userId', 'spotId', 'review', 'stars', 'createdAt', 'updatedAt'],
+        include: [
+          { model: User, attributes: ['id', 'firstName', 'lastName']},
+          { model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
+            include: { model: SpotImage,
+              attributes: ['url'],
+              where: {
+                preview: true
+              },
+              required: false}
+        },
+          { model: ReviewImage, attributes: ['id', 'url']}
+        ]
+      });
+
+    const modifiedResult = []
+    for (const entry of reviews) {
+     const modifiedEntry = entry.toJSON();
+     //if images for the spot exist then ->
+     if (modifiedEntry.Spot.SpotImages.length !== 0) {
+       modifiedEntry.Spot.previewImage = modifiedEntry.Spot.SpotImages[0].url
+       delete modifiedEntry.Spot.SpotImages
+       modifiedResult.push(modifiedEntry);
+     } else {
+       delete modifiedEntry.Spot.SpotImages
+     modifiedResult.push(modifiedEntry)
+    }
+  }
+      return res.json({
+        Reviews:  modifiedResult
+      });
+    });
+
+
+
+
 
 router.put("/:reviewId", requireAuth, checkExist, validateReview, async (req, res) => {
   const { review, stars } = req.body;

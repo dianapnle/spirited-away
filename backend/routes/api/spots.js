@@ -1,7 +1,7 @@
 //holds route paths to /api/spots
 const express = require('express');
 const { Op } = require('sequelize');
-const { Spot, SpotImage, User, Review } = require('../../db/models');
+const { Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 const { check } = require('express-validator');
@@ -155,6 +155,40 @@ const validateSpot = [
   });
 
 
+
+
+  // get all reviews by a spot's id
+  router.get('/:spotId/reviews', async (req, res) => {
+    //use param spot id to look for the spot
+    const { spotId } = req.params;
+    const search = await Spot.findByPk(Number(spotId));
+    //if there is no spot that matches the given spotid from parameter -> throw an error
+    if (search === null) {
+        const err = new Error()
+        err.message = "Spot couldn't be found";
+        res.status(404);
+        return res.json({
+          message: err.message
+      })
+    };
+
+    const reviews = await Review.findAll({
+      where: {
+          spotId: spotId
+      },
+      attributes: ['id', 'userId', 'spotId', 'review', 'stars', 'createdAt', 'updatedAt'],
+      include: [
+        { model: User, attributes: ['id', 'firstName', 'lastName']},
+        { model: ReviewImage, attributes: ['id', 'url']}
+      ]
+    });
+
+    return res.json({
+      Reviews:  reviews
+    });
+  });
+
+
     // get details of a spot from an id
     router.get('/:spotId', spotExist, async (req, res) => {
       //use param spot id to look for the spot
@@ -169,6 +203,8 @@ const validateSpot = [
       ]})
         return res.json(spot);
     });
+
+
 
 
 
