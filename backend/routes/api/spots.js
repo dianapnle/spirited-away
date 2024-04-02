@@ -218,7 +218,7 @@ const validateSpot = [
       const sum = await Review.sum('stars',
         {where: {spotId: spotId} }
       )
-      const count = await Review.count('id',
+      const count = await Review.count(
        { where: {spotId: spotId } }
       );
 
@@ -229,8 +229,6 @@ const validateSpot = [
 
         return res.json(modifiedResult);
     });
-
-
 
 
 
