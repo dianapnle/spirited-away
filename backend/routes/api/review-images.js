@@ -34,7 +34,7 @@ async function validateUser (req, res, next) {
       return next(err);
     };
 
-//delete an image from a spot
+//delete an image from a review
 router.delete('/:imageId', requireAuth, validateUser, async (req, res) => {
     //use param spot id to look for the spot
     const imageId = req.params.imageId;

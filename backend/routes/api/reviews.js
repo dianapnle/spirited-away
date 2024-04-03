@@ -7,6 +7,22 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
+
+
+async function dateConverter (value) {
+  const convertedDate = new Date(value);
+
+  const currentDay = convertedDate.getDate();
+  const currentMonth = convertedDate.getMonth();
+  const currentYear = convertedDate.getFullYear();
+  const currentHours = convertedDate.getHours();
+  const currentMinutes = convertedDate.getMinutes();
+  const currentSeconds = convertedDate.getSeconds();
+
+  const dateString = `${currentYear}-${currentMonth + 1}-${currentDay} ${currentHours}:${currentMinutes}:${currentSeconds}`;
+  return dateString
+};
+
 // The validateSignup middleware is composed of the check and handleValidationErrors middleware
 //   If at least one of the req.body values fail the check, an error will be returned as the response.
 const validateReview = [
@@ -57,8 +73,7 @@ async function authorize(req, res, next) {
   err.title = 'Authorization required';
   err.errors = { message: 'Authorization required' };
   err.status = 403;
-
-return next();
+  return next(err);
 }
 
 ///////////////////////////////////////////
@@ -86,10 +101,14 @@ return next();
      //if images for the spot exist then ->
      if (modifiedEntry.Spot.SpotImages.length !== 0) {
        modifiedEntry.Spot.previewImage = modifiedEntry.Spot.SpotImages[0].url
-       delete modifiedEntry.Spot.SpotImages
+       delete modifiedEntry.Spot.SpotImages;
+       modifiedEntry.createdAt = await dateConverter(entry.createdAt);
+       modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
        modifiedResult.push(modifiedEntry);
      } else {
-       delete modifiedEntry.Spot.SpotImages
+       delete modifiedEntry.Spot.SpotImages;
+       modifiedEntry.createdAt = await dateConverter(entry.createdAt);
+       modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
      modifiedResult.push(modifiedEntry)
     }
   }
@@ -101,8 +120,8 @@ return next();
 
 
 
-
-router.put("/:reviewId", requireAuth, checkExist, validateReview, async (req, res) => {
+//edit review
+router.put("/:reviewId", requireAuth, checkExist, authorize, validateReview, async (req, res) => {
   const { review, stars } = req.body;
   //use param review id to look for the review
   const reviewId = req.params.reviewId;
@@ -117,11 +136,19 @@ router.put("/:reviewId", requireAuth, checkExist, validateReview, async (req, re
     createdAt: result.createdAt,
     updatedAt: result.updatedAt
   })
-  return res.json(result)
+  return res.json({
+    id: result.id,
+    userId: result.userId,
+    spotId: result.spotId,
+    review: review,
+    stars: stars,
+    createdAt: await dateConverter(result.createdAt),
+    updatedAt: await dateConverter(result.updatedAt)
+  })
 
 })
 
-router.post('/:reviewId/images', requireAuth, authorize, async (req, res) => {
+router.post('/:reviewId/images', requireAuth, async (req, res) => {
   const reviewId = req.params.reviewId;
   const count = await ReviewImage.count();
   //if there are more than 10 review images, throw an error
@@ -161,10 +188,6 @@ router.delete('/:reviewId', requireAuth, checkExist, async (req, res) => {
         });
 
 });
-
-
-
-
 
 
 
