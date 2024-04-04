@@ -1,37 +1,156 @@
 //holds route paths to /api/bookings
 const express = require('express');
 const { Op } = require('sequelize');
-const { Spot } = require('../../db/models');
+const { Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
+
+const validateBooking = [
+    //It checks to see if there is an address, etc
+    check('startDate')
+    .exists({ checkFalsy: true })
+    .withMessage('startDate cannot be in the past'),
+    check('endDate')
+    .exists({ checkFalsy: true })
+    .withMessage('endDate cannot be on or before startDate'),
+    handleValidationErrors
+  ];
+
+async function dateConverter (value) {
+    const convertedDate = new Date(value);
+
+
+    const currentDay = convertedDate.getDate();
+    const currentMonth = convertedDate.getMonth();
+    const currentYear = convertedDate.getFullYear();
+    const currentHours = convertedDate.getHours();
+    const currentMinutes = convertedDate.getMinutes();
+    const currentSeconds = convertedDate.getSeconds();
+
+    const dateString = `${currentYear}-${currentMonth + 1}-${currentDay} ${currentHours}:${currentMinutes}:${currentSeconds}`;
+    return dateString
+  };
+
+async function authorize(req, res, next) {
+    const bookingId = req.params.bookingId;
+    const search = await Booking.findByPk(Number(bookingId));
+    //if there is no review that matches the given reviewid from parameter -> throw an error
+    if (search === null) {
+        const err = new Error();
+        err.message = "Booking couldn't be found";
+        err.status = 404;
+        return next(err);
+    }
+
+    //pull the owner id to check if it matches with req.user
+    //if it does match -> continue on to next function
+    if (req.user.id === search.userId) {
+      return next()
+    };
+
+  //else throw an authorization error
+  const err = new Error('Authorization required');
+  err.title = 'Authorization required';
+  err.errors = { message: 'Authorization required' };
+  err.status = 403;
+  return next(err);
+}
+
+
+async function dateWithoutHours (value) {
+
+    const convertedDate = new Date(value).setHours(0,0,0,0);
+    console.log(value)
+
+    const currentDay = convertedDate.getDate();
+    const currentMonth = convertedDate.getMonth();
+    const currentYear = convertedDate.getFullYear();
+
+    const dateString = `${currentYear}-${currentMonth + 1}-${currentDay}`;
+    return dateString
+  };
+
 
 //edit booking
-router.put("/:bookingId", requireAuth, async (req, res) => {
-    const { review, stars } = req.body;
+router.put("/:bookingId", requireAuth, authorize, validateBooking, async (req, res) => {
     //use param review id to look for the review
-    const reviewId = req.params.reviewId;
-    let result = await Review.findByPk(Number(reviewId));
+    const bookingId = req.params.bookingId;
+    //grab the startDate and endDate from req.body
+    let {startDate, endDate} = req.body;
 
-     await result.update({
-      id: reviewId,
-      userId: req.user.id,
-      spotId: result.spotId,
-      review: review,
-      stars: stars,
-      createdAt: result.createdAt,
-      updatedAt: result.updatedAt
-    })
-    return res.json({
-      id: result.id,
-      userId: result.userId,
-      spotId: result.spotId,
-      review: review,
-      stars: stars,
-      createdAt: await dateConverter(result.createdAt),
-      updatedAt: await dateConverter(result.updatedAt)
-    })
+    let search = await Booking.findByPk(Number(bookingId));
 
-  })
+    const testBooking = await Booking.build({
+        userId: req.user.id,
+        spotId: search.spotId,
+        startDate: startDate,
+        endDate: endDate
+      });
+
+  const conflicts = await Booking.findAll({
+    where: {
+      startDate: {
+      [Op.lt]: testBooking.endDate
+      },
+      endDate: {
+        [Op.gt]: testBooking.startDate
+      },
+      id: {
+        [Op.ne]: bookingId
+      }
+      }
+    }
+  );
+
+
+//if the above has conflicts
+if (conflicts.length !== 0) {
+  const err = new Error();
+  err.message ="Sorry, this spot is already booked for the specified dates";
+  err.errors = {};
+
+  for (entry of conflicts) {
+    if (testBooking.startDate < entry.endDate) {
+        //add to errors object
+        err.errors.startDate = "Start date conflicts with an existing booking"
+    }
+    if (testBooking.endDate > entry.startDate) {
+        //add to errors object
+        err.errors.endDate = "End date conflicts with an existing booking"
+    }
+  }
+  res.status(403);
+  return res.json({
+        message: err.message,
+        errors: err.errors
+  });
+}
+
+    //if it does not conflict with any previous bookings update the data
+
+    search = await search.update({
+     id: bookingId,
+     userId: req.user.id,
+     spotId: search.spotId,
+     startDate: startDate,
+     endDate: endDate,
+   });
+   console.log(search.toJSON())
+
+  res.status(200);
+  return res.json({
+    id: search.id,
+    userId: search.userId,
+    spotId: search.spotId,
+    startDate:  startDate,
+    endDate: endDate,
+    updatedAt: await dateConverter(search.updatedAt),
+    createdAt: await dateConverter(search.createdAt)
+  });
+
+  });
 
 
 module.exports = router;

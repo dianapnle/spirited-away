@@ -8,6 +8,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 var Sequelize = require('sequelize');
 
+
 async function dateConverter (value) {
   const convertedDate = new Date(value);
 
@@ -411,7 +412,7 @@ async function checkExist (req, res, next) {
       return next(err);
     }
 
-    return next()
+    return next();
 }
 
 //create a review for a post based on spot's id
@@ -467,37 +468,61 @@ async function notOwner (req, res, next) {
 router.post('/:spotId/bookings', requireAuth, notOwner, async (req, res) => {
   const spotId = req.params.spotId;
   const {startDate, endDate} = req.body;
-  const search1 = await Booking.findAll({ where: {startDate: startDate}});
-  const search2 = await Booking.findAll({where: {endDate: endDate}});
 
-  // booking conflict error, if either exist then throw an error
-    if (search1 || search2) {
-      const err = new Error();
-      err.message = "Sorry, this spot is already booked for the specified dates";
-      err.status = 403;
-      err.errors = {
-        startDate: "Start date conflicts with an existing booking",
-        endDate: "End date conflicts with an existing booking"
-      }
-      return res.json({
-        message: err.message,
-        errors: err.errors
-      })
-    };
-
-  const newBooking = await Booking.create({
+  const newBooking = await Booking.build({
     userId: req.user.id,
     spotId: spotId,
     startDate: startDate,
     endDate: endDate
-  })
+  });
+
+  //validated against model constraints
+  await newBooking.validate();
+
+  const conflicts = await Booking.findAll({
+    where: {
+      startDate: {
+      [Op.lt]: newBooking.endDate
+      },
+      endDate: {
+        [Op.gt]: newBooking.startDate
+      }
+      }
+    }
+  );
+
+if (conflicts.length !== 0) {
+  const err = new Error();
+  err.message ="Sorry, this spot is already booked for the specified dates";
+  err.errors = {};
+
+  for (entry of conflicts) {
+    if (newBooking.startDate < entry.endDate) {
+        //add to errors object
+        err.errors.startDate = "Start date conflicts with an existing booking"
+    }
+    if (newBooking.endDate > entry.startDate) {
+        //add to errors object
+        err.errors.endDate = "End date conflicts with an existing booking"
+    }
+  }
+  res.status(403);
+  return res.json({
+        message: err.message,
+        errors: err.errors
+  });
+}
+
+
+  //if it does not conflict with any previous bookings save the data
+  await newBooking.save();
   res.status(200);
   return res.json({
     id: newBooking.id,
     userId: newBooking.userId,
     spotId: newBooking.spotId,
-    startDate:  await dateConverter(newBooking.startDate),
-    endDate: await dateConverter(newBooking.endDate),
+    startDate:  startDate,
+    endDate: endDate,
     updatedAt: await dateConverter(newBooking.updatedAt),
     createdAt: await dateConverter(newBooking.createdAt)
   })
