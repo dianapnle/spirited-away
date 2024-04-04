@@ -132,9 +132,7 @@ router.put("/:reviewId", requireAuth, checkExist, authorize, validateReview, asy
     userId: req.user.id,
     spotId: result.spotId,
     review: review,
-    stars: stars,
-    createdAt: result.createdAt,
-    updatedAt: result.updatedAt
+    stars: stars
   })
   return res.json({
     id: result.id,

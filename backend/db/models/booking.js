@@ -25,10 +25,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       validate: {
         isAfter(value) {
-          var modifiedValue = new Date(value)
-          let current = new Date();
-          if (modifiedValue < current) {
-            throw new Error("startDate cannot be in the past");
+          //convert date object value into a string
+          const userDateString = value.toISOString();
+          //take off the z of the string and make another date object with same time as current
+          const modifiedValue = new Date(userDateString.substring(0, userDateString.length-1))
+          //new Date () gives current time with time stamp, dateString gives the date only without time, then create another date object with it
+          //to normalize both and compare
+          let current = new Date((new Date().toDateString()))
+          if(modifiedValue < current){
+            throw new Error("startDate cannot be in the past")
           }
         }
       }
@@ -37,12 +42,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       validate: {
         isGreaterThanstartDate(value) {
-
-          var endModifiedValue = new Date(value);
-
-          var startModifiedValue= new Date(this.startDate);
-
-          if (parseInt(endModifiedValue.getTime()) <= parseInt(startModifiedValue.getTime())) {
+          //both values should be in utc time
+          if (value <= this.startDate) {
             throw new Error("endDate cannot be on or before startDate");
           }
         }

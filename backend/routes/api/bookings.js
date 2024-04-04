@@ -7,21 +7,19 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-const validateBooking = [
-    //It checks to see if there is an address, etc
-    check('startDate')
-    .exists({ checkFalsy: true })
-    .withMessage('startDate cannot be in the past'),
-    check('endDate')
-    .exists({ checkFalsy: true })
-    .withMessage('endDate cannot be on or before startDate'),
-    handleValidationErrors
-  ];
+// const validateBooking = [
+//     //It checks to see if there is an address, etc
+//     check('startDate')
+//     .exists({ checkFalsy: true })
+//     .withMessage('startDate cannot be in the past'),
+//     check('endDate')
+//     .exists({ checkFalsy: true })
+//     .withMessage('endDate cannot be on or before startDate'),
+//     handleValidationErrors
+//   ];
 
 async function dateConverter (value) {
     const convertedDate = new Date(value);
-
-
     const currentDay = convertedDate.getDate();
     const currentMonth = convertedDate.getMonth();
     const currentYear = convertedDate.getFullYear();
@@ -36,13 +34,6 @@ async function dateConverter (value) {
 async function authorize(req, res, next) {
     const bookingId = req.params.bookingId;
     const search = await Booking.findByPk(Number(bookingId));
-    //if there is no review that matches the given reviewid from parameter -> throw an error
-    if (search === null) {
-        const err = new Error();
-        err.message = "Booking couldn't be found";
-        err.status = 404;
-        return next(err);
-    }
 
     //pull the owner id to check if it matches with req.user
     //if it does match -> continue on to next function
@@ -58,23 +49,51 @@ async function authorize(req, res, next) {
   return next(err);
 }
 
+//validate if booking exist
+async function checkExist (req, res, next) {
+    //use param booking id to look for the spot
+    const bookingId = req.params.bookingId;
 
-async function dateWithoutHours (value) {
+    const search = await Booking.findByPk(Number(bookingId));
+    //if there is no booking that matches the given spotid from parameter -> throw an error
+    if (search === null) {
+      const err = new Error();
+      err.message = "Booking couldn't be found";
+      err.status = 404;
+      return next(err);
+    };
+    return next();
+};
 
-    const convertedDate = new Date(value).setHours(0,0,0,0);
-    console.log(value)
+async function hasPast (req, res, next) {
+    //use param booking id to look for the spot
+    const bookingId = req.params.bookingId;
 
-    const currentDay = convertedDate.getDate();
-    const currentMonth = convertedDate.getMonth();
-    const currentYear = convertedDate.getFullYear();
+    const search = await Booking.findByPk(Number(bookingId));
 
-    const dateString = `${currentYear}-${currentMonth + 1}-${currentDay}`;
-    return dateString
-  };
+    //returns just the date of current not the time stamp
+    let current = new Date((new Date().toDateString()));
+
+    //remove the Z so the value is in local time
+    //turn the endDate into a string
+    let endISOString = search.endDate.toISOString();
+    //then take up to the z and then convert that to a new date object to compare to current object w/o time stamp
+    let localEndDate = new Date(endISOString.substring(0, endISOString.length-1))
+
+    if (localEndDate < current) {
+      const err = new Error();
+      err.message = "Past bookings can't be modified";
+      err.status = 403;
+      return next(err);
+    };
+    return next();
+};
+
+
 
 
 //edit booking
-router.put("/:bookingId", requireAuth, authorize, validateBooking, async (req, res) => {
+router.put("/:bookingId", requireAuth, authorize, checkExist, hasPast, async (req, res) => {
     //use param review id to look for the review
     const bookingId = req.params.bookingId;
     //grab the startDate and endDate from req.body
@@ -88,6 +107,7 @@ router.put("/:bookingId", requireAuth, authorize, validateBooking, async (req, r
         startDate: startDate,
         endDate: endDate
       });
+    await testBooking.validate();
 
   const conflicts = await Booking.findAll({
     where: {
@@ -135,7 +155,7 @@ if (conflicts.length !== 0) {
      userId: req.user.id,
      spotId: search.spotId,
      startDate: startDate,
-     endDate: endDate,
+     endDate: endDate
    });
    console.log(search.toJSON())
 
@@ -151,6 +171,41 @@ if (conflicts.length !== 0) {
   });
 
   });
+
+
+//delete review
+router.delete('/:bookingId', requireAuth, checkExist, authorize, async (req, res) => {
+    //use param booking id to look for the booking after checking it exists
+    //and after checking if owner matches
+
+    const bookingId = req.params.bookingId;
+    //returns just the date of current not the time stamp
+    let current = new Date((new Date().toDateString()));
+    //error response for bookings that have been started
+    const search = await Booking.findByPk(Number(bookingId));
+    //remove the Z so the value is in local time
+    //turn the startDate into a string
+    let startISOString = search.startDate.toISOString();
+    //then take up to the z and then convert that to a new date object to compare to current object w/o time stamp
+    let localStartDate = new Date(startISOString.substring(0, startISOString.length-1))
+
+    if (localStartDate > current) {
+        const err = new Error()
+        err.message = "Bookings that have been started can't be deleted";
+        res.status(403);
+        return res.json({
+          message: err.message
+      })
+    };
+
+    await Booking.destroy({
+       where: {id: bookingId}
+    });
+    res.status(200);
+    return res.json({
+         message:"Successfully deleted"
+      });
+});
 
 
 module.exports = router;
