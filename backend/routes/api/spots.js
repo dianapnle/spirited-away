@@ -100,8 +100,18 @@ const validateSpot = [
   handleValidationErrors
 ];
 
+
+
     // get all spots
-    router.get('/', async (req, res) => {
+    router.get('/', async (req, res, next) => {
+
+      //if there are any query parameters
+      if(Object.keys(req.query).length !== 0) {
+          //call next function that handles query parameters
+          next(); // call next handler in chain
+          return; // exit since we should have processed a response
+      };
+
       const spots = await Spot.findAll({
         attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
         'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt'],
@@ -140,6 +150,91 @@ const validateSpot = [
         Spots:  modifiedResult
       });
     });
+
+    async function validateQueryParams (req, res, next) {
+      //this middle ware validates each query parameter if they exist
+      let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+      const err = new Error();
+      err.message ="Bad Request";
+      err.errors = {};
+
+      minLat = Number(minLat);
+      maxLat = Number(maxLat);
+      minLng = Number(minLng);
+      maxLng = Number(maxLng);
+      minPrice = Number (minPrice);
+      maxPrice = Number(maxPrice);
+
+      if (minLat && isNaN(minLat) || minLat && minLat < -90 || minLat && minLat > 90 ) {
+        err.errors.minLat = "Minimum latitude is invalid";
+      };
+
+      if (maxLat && isNaN(maxLat) || maxLat && maxLat < -90 || maxLat && maxLat > 90 ) {
+        err.errors.maxLat = "Maximum latitude is invalid";
+      };
+
+      if (minLng && isNaN(minLng) || minLng && minLng < -180 || minLng && minLng > 180 ) {
+        err.errors.minLng = "Minimum longitude is invalid";
+      };
+
+      if (maxLng && isNaN(maxLng) || maxLng && maxLng > 180 ) {
+        err.errors.maxLng = "Maximum longitude is invalid";
+      };
+
+      if (minPrice && isNaN(minPrice) || minPrice && minPrice < 0 ) {
+        err.errors.minPrice = "Minimum price must be greater than or equal to 0";
+      };
+
+      if (maxPrice && isNaN(maxPrice) || maxPrice && maxPrice < 0 ) {
+        err.errors.maxPrice = "Maximum price must be greater than or equal to 0";
+      };
+
+      if (Object.values(err.errors).length !== 0 ){
+      res.status(400);
+      return res.json({
+            message: err.message,
+            errors: err.errors
+      })} else {
+        return next();
+      };
+    };
+
+
+  //get all spots with query filters
+  router.get('/', async (req, res) => {
+    let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+  //convert to the values to numbers
+  page = Number(page);
+  size = Number(size);
+
+  //if the given value is not a number OR less than 1, set default to 1
+  if (isNaN(page) || page < 1) page = 1;
+
+  if (isNaN(size) || size < 1) size = 20;
+  // If the size parameter is greater than 20, then the size should be set and limited to 20
+  if (size > 20) size = 20;
+
+  const where = {};
+  const pagination = {};
+  //if there are size and page queries in req -> add to pagination object
+  pagination.limit=size;
+  pagination.offset=size * (page - 1);
+
+
+
+
+  const spots = await Spot.findAll({
+      where,
+      ...pagination
+    })
+  return res.json({
+   spots,
+   page: page,
+   size: size
+});
+  });
+
+
 
 
 
@@ -491,7 +586,7 @@ router.post('/:spotId/bookings', requireAuth, notOwner, async (req, res) => {
     }
   );
 
-  console.log(conflicts)
+
 if (conflicts.length !== 0) {
   const err = new Error();
   err.message ="Sorry, this spot is already booked for the specified dates";

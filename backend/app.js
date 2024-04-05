@@ -72,19 +72,36 @@ app.use((err, _req, _res, next) => {
     next(err);
   });
 
+// // Error formatter
+// app.use((err, _req, res, _next) => {
+//     res.status(err.status || 500);
+//     console.error(err);
+//     res.json({
+//       // title: err.title || 'Server Error',
+//       message: err.message,
+//       errors: err.errors,
+//       //adjust this:
+//       stack: isProduction ? null : err.stack
+//     });
+//   });
+
 // Error formatter
+
+
 app.use((err, _req, res, _next) => {
-    res.status(err.status || 500);
+  let devJson = {
+    message: err.message,
+    errors: err.errors,
+    stack: err.stack
+  };
+
+  let prodJson = {
+    message: err.message
+  };
+
+  res.status(err.status || 500);
     console.error(err);
-    res.json({
-      // title: err.title || 'Server Error',
-      message: err.message,
-      errors: err.errors,
-      //adjust this:
-      stack: isProduction ? null : err.stack
-    });
+    res.json(isProduction ? prodJson : devJson);
   });
-
-
 
 module.exports = app;
