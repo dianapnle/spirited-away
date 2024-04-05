@@ -50,7 +50,7 @@ Returns the information about the current user that is logged in.
 * Require Authentication: false
 * Request
   * Method: GET
-  * URL: /api/users/current
+  * URL: /api/session
   * Body: none
 
 * Successful Response when there is a logged in user
@@ -91,7 +91,7 @@ information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: /api/login
+  * URL: /api/session
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -157,7 +157,7 @@ user's information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: /api/signup
+  * URL: /api/users
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -511,7 +511,7 @@ Updates and returns an existing spot.
 * Require Authentication: true
 * Require proper authorization: Spot must belong to the current user
 * Request
-  * Method: PATCH/PUT
+  * Method: PUT
   * URL: /api/spots/:spotId
   * Headers:
     * Content-Type: application/json
@@ -879,7 +879,7 @@ Update and return an existing review.
 * Require Authentication: true
 * Require proper authorization: Review must belong to the current user
 * Request
-  * Method: PATCH/PUT
+  * Method: PUT
   * URL: /api/reviews/:reviewId
   * Headers:
     * Content-Type: application/json
@@ -1176,7 +1176,7 @@ Update and return an existing booking.
 * Require Authentication: true
 * Require proper authorization: Booking must belong to the current user
 * Request
-  * Method: PATCH/PUT
+  * Method: PUT
   * URL: /api/bookings/:bookingId
   * Headers:
     * Content-Type: application/json
@@ -1321,7 +1321,7 @@ Delete an existing image for a Spot.
 * Require proper authorization: Spot must belong to the current user
 * Request
   * Method: DELETE
-  * URL: /api/spots-images/:imageId
+  * URL: /api/spot-images/:imageId
   * Body: none
 
 * Successful Response
@@ -1356,8 +1356,7 @@ Delete an existing image for a Review.
 * Require proper authorization: Review must belong to the current user
 * Request
   * Method: DELETE
-  * URL: /api/reviews-images/:imageId
-  <!-- //: /api/images/:imageId/reviews -->
+  * URL: /api/review-images/:imageId
   * Body: none
 
 * Successful Response
