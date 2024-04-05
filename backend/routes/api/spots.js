@@ -153,41 +153,47 @@ const validateSpot = [
 
     async function validateQueryParams (req, res, next) {
       //this middle ware validates each query parameter if they exist
-      let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+      let {minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
       const err = new Error();
       err.message ="Bad Request";
       err.errors = {};
 
-      minLat = Number(minLat);
-      maxLat = Number(maxLat);
-      minLng = Number(minLng);
-      maxLng = Number(maxLng);
-      minPrice = Number (minPrice);
-      maxPrice = Number(maxPrice);
 
-      if (minLat && isNaN(minLat) || minLat && minLat < -90 || minLat && minLat > 90 ) {
-        err.errors.minLat = "Minimum latitude is invalid";
-      };
+      if (minLat) {
+        minLat = Number(minLat);
+        if (isNaN(minLat) || minLat && minLat < -90 || minLat && minLat > 90 ) {
+          err.errors.minLat = "Minimum latitude is invalid";
+        }};
 
-      if (maxLat && isNaN(maxLat) || maxLat && maxLat < -90 || maxLat && maxLat > 90 ) {
-        err.errors.maxLat = "Maximum latitude is invalid";
-      };
+      if (maxLat) {
+        maxLat = Number(maxLat);
+        if (isNaN(maxLat) || maxLat && maxLat < -90 || maxLat && maxLat > 90 ) {
+          err.errors.maxLat = "Maximum latitude is invalid";
+        }};
 
-      if (minLng && isNaN(minLng) || minLng && minLng < -180 || minLng && minLng > 180 ) {
-        err.errors.minLng = "Minimum longitude is invalid";
-      };
+      if (minLng) {
+        minLng = Number(minLng);
+        if (isNaN(minLng) || minLng && minLng < -180 || minLng && minLng > 180 ) {
+          err.errors.minLng = "Minimum longitude is invalid";
+        }};
 
-      if (maxLng && isNaN(maxLng) || maxLng && maxLng > 180 ) {
-        err.errors.maxLng = "Maximum longitude is invalid";
-      };
+      if (maxLng) {
+        maxLng = Number(maxLng);
+        if (isNaN(maxLng) || maxLng && maxLng > 180 ) {
+          err.errors.maxLng = "Maximum longitude is invalid";
+        }};
 
-      if (minPrice && isNaN(minPrice) || minPrice && minPrice < 0 ) {
-        err.errors.minPrice = "Minimum price must be greater than or equal to 0";
-      };
+      if (minPrice) {
+        minPrice = Number (minPrice);
+        if (isNaN(minPrice) || minPrice && minPrice < 0 ) {
+          err.errors.minPrice = "Minimum price must be greater than or equal to 0";
+        }};
 
-      if (maxPrice && isNaN(maxPrice) || maxPrice && maxPrice < 0 ) {
-        err.errors.maxPrice = "Maximum price must be greater than or equal to 0";
-      };
+      if (maxPrice) {
+        maxPrice = Number(maxPrice);
+        if (isNaN(maxPrice) || maxPrice && maxPrice < 0 ) {
+          err.errors.maxPrice = "Maximum price must be greater than or equal to 0";
+        }};
 
       if (Object.values(err.errors).length !== 0 ){
       res.status(400);
@@ -201,40 +207,93 @@ const validateSpot = [
 
 
   //get all spots with query filters
-  router.get('/', async (req, res) => {
-    let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
-  //convert to the values to numbers
-  page = Number(page);
-  size = Number(size);
+  router.get('/', validateQueryParams, async (req, res) => {
+      let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+      //convert to the values to numbers
+      page = Number(page);
+      size = Number(size);
 
-  //if the given value is not a number OR less than 1, set default to 1
-  if (isNaN(page) || page < 1) page = 1;
+      //if the given value is not a number OR less than 1, set default to 1
+      if (isNaN(page) || page < 1) page = 1;
 
-  if (isNaN(size) || size < 1) size = 20;
-  // If the size parameter is greater than 20, then the size should be set and limited to 20
-  if (size > 20) size = 20;
-
-  const where = {};
-  const pagination = {};
-  //if there are size and page queries in req -> add to pagination object
-  pagination.limit=size;
-  pagination.offset=size * (page - 1);
+      if (isNaN(size) || size < 1) size = 20;
+      // If the size parameter is greater than 20, then the size should be set and limited to 20
+      if (size > 20) size = 20;
 
 
+      const pagination = {};
+      //if there are size and page queries in req -> add to pagination object
+      pagination.limit=size;
+      pagination.offset=size * (page - 1);
 
+      let searchParams = [];
+
+      if (minLat) {
+      searchParams.push({lat: {[Op.gte]: minLat}})
+      };
+      if(maxLat) {
+      searchParams.push({lat: {[Op.lte]: maxLat}})
+      };
+      if(minLng) {
+        searchParams.push({lng: {[Op.gte]: minLng}})
+      };
+      if(maxLng) {
+        searchParams.push({lng: {[Op.lte]: maxLng}})
+      };
+      if(minPrice) {
+        searchParams.push({price: {[Op.gte]: minPrice}})
+      };
+      if(maxPrice) {
+        searchParams.push({price: {[Op.lte]: maxPrice}})
+      };
+      ////////////////////
 
   const spots = await Spot.findAll({
-      where,
-      ...pagination
-    })
-  return res.json({
-   spots,
-   page: page,
-   size: size
-});
+    attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
+    'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt'],
+    include: [
+      { model: SpotImage, attributes: ['url'], where: {preview: true}, required: false}],
+      group: ['Spot.id'],
+      where: {[Op.and]: searchParams},
+        ...pagination
+      });
+
+    const modifiedResult = [];
+
+      for (const entry of spots) {
+          const modifiedEntry = entry.toJSON();
+          //find the sum stars and count of each spot using reviews
+          const sumStars = await Review.sum('stars', {
+            where: {spotId: entry.id}
+          })
+          const count = await Review.count({where: {spotId: entry.id}});
+          const average = sumStars/count;
+
+          //if images for the spot exist then ->
+          if (modifiedEntry.SpotImages.length !== 0) {
+              modifiedEntry.previewImage = modifiedEntry.SpotImages[0].url;
+              delete modifiedEntry.SpotImages;
+              modifiedEntry.avgRating = average;
+              modifiedEntry.createdAt = await dateConverter(entry.createdAt);
+              modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+
+              modifiedResult.push(modifiedEntry);
+          } else if (modifiedEntry.SpotImages.length === 0){
+              modifiedEntry.createdAt = await dateConverter(entry.createdAt);
+              modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+              delete modifiedEntry.SpotImages;
+              modifiedEntry.avgRating = average;
+
+              modifiedResult.push(modifiedEntry)
+          };
+      };
+    res.status(200);
+    return res.json({
+      Spots: modifiedResult,
+      page: page,
+      size: size
+      });
   });
-
-
 
 
 
@@ -280,7 +339,6 @@ const validateSpot = [
       Spots:  modifiedResult
     });
   });
-
 
 
 
