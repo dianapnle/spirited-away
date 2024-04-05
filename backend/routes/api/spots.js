@@ -482,26 +482,27 @@ router.post('/:spotId/bookings', requireAuth, notOwner, async (req, res) => {
   const conflicts = await Booking.findAll({
     where: {
       startDate: {
-      [Op.lt]: newBooking.endDate
+      [Op.lte]: newBooking.endDate
       },
       endDate: {
-        [Op.gt]: newBooking.startDate
+        [Op.gte]: newBooking.startDate
       }
       }
     }
   );
 
+  console.log(conflicts)
 if (conflicts.length !== 0) {
   const err = new Error();
   err.message ="Sorry, this spot is already booked for the specified dates";
   err.errors = {};
 
   for (entry of conflicts) {
-    if (newBooking.startDate < entry.endDate) {
+    if (newBooking.startDate <= entry.endDate) {
         //add to errors object
         err.errors.startDate = "Start date conflicts with an existing booking"
     }
-    if (newBooking.endDate > entry.startDate) {
+    if (newBooking.endDate >= entry.startDate) {
         //add to errors object
         err.errors.endDate = "End date conflicts with an existing booking"
     }

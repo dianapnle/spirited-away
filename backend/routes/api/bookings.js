@@ -1,22 +1,11 @@
 //holds route paths to /api/bookings
 const express = require('express');
 const { Op } = require('sequelize');
-const { Booking } = require('../../db/models');
+const { Booking, Spot } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-
-// const validateBooking = [
-//     //It checks to see if there is an address, etc
-//     check('startDate')
-//     .exists({ checkFalsy: true })
-//     .withMessage('startDate cannot be in the past'),
-//     check('endDate')
-//     .exists({ checkFalsy: true })
-//     .withMessage('endDate cannot be on or before startDate'),
-//     handleValidationErrors
-//   ];
 
 async function dateConverter (value) {
     const convertedDate = new Date(value);
@@ -33,11 +22,14 @@ async function dateConverter (value) {
 
 async function authorize(req, res, next) {
     const bookingId = req.params.bookingId;
-    const search = await Booking.findByPk(Number(bookingId));
+    const search = await Booking.findOne({
+        where: {id: Number(bookingId)},
+        include: [{ model: Spot }]
+    });
 
-    //pull the owner id to check if it matches with req.user
+    //pull the user id to check if it matches with req.user (same person who booked it) or spot owner
     //if it does match -> continue on to next function
-    if (req.user.id === search.userId) {
+    if (req.user.id === search.userId || req.user.id === search.Spot.ownerId) {
       return next()
     };
 
@@ -47,7 +39,7 @@ async function authorize(req, res, next) {
   err.errors = { message: 'Authorization required' };
   err.status = 403;
   return next(err);
-}
+};
 
 //validate if booking exist
 async function checkExist (req, res, next) {
@@ -112,10 +104,10 @@ router.put("/:bookingId", requireAuth, authorize, checkExist, hasPast, async (re
   const conflicts = await Booking.findAll({
     where: {
       startDate: {
-      [Op.lt]: testBooking.endDate
+      [Op.lte]: testBooking.endDate
       },
       endDate: {
-        [Op.gt]: testBooking.startDate
+        [Op.gte]: testBooking.startDate
       },
       id: {
         [Op.ne]: bookingId
@@ -132,11 +124,11 @@ if (conflicts.length !== 0) {
   err.errors = {};
 
   for (entry of conflicts) {
-    if (testBooking.startDate < entry.endDate) {
+    if (testBooking.startDate <= entry.endDate) {
         //add to errors object
         err.errors.startDate = "Start date conflicts with an existing booking"
     }
-    if (testBooking.endDate > entry.startDate) {
+    if (testBooking.endDate >= entry.startDate) {
         //add to errors object
         err.errors.endDate = "End date conflicts with an existing booking"
     }
@@ -173,7 +165,7 @@ if (conflicts.length !== 0) {
   });
 
 
-//delete review
+//delete booking
 router.delete('/:bookingId', requireAuth, checkExist, authorize, async (req, res) => {
     //use param booking id to look for the booking after checking it exists
     //and after checking if owner matches
@@ -186,10 +178,12 @@ router.delete('/:bookingId', requireAuth, checkExist, authorize, async (req, res
     //remove the Z so the value is in local time
     //turn the startDate into a string
     let startISOString = search.startDate.toISOString();
+    let endISOString = search.endDate.toISOString();
+    let localEndDate = new Date(endISOString.substring(0, endISOString.length-1))
     //then take up to the z and then convert that to a new date object to compare to current object w/o time stamp
     let localStartDate = new Date(startISOString.substring(0, startISOString.length-1))
 
-    if (localStartDate > current) {
+    if (localStartDate <= current) {
         const err = new Error()
         err.message = "Bookings that have been started can't be deleted";
         res.status(403);
