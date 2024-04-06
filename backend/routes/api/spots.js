@@ -138,11 +138,13 @@ const validateSpot = [
        delete modifiedEntry.SpotImages;
        modifiedEntry.createdAt = await dateConverter(entry.createdAt);
        modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+       modifiedEntry.price = Number(entry.price);
        modifiedResult.push(modifiedEntry);
      } else if (modifiedEntry.SpotImages.length === 0){
       modifiedEntry.createdAt = await dateConverter(entry.createdAt);
       modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
-       delete modifiedEntry.SpotImages
+      delete modifiedEntry.SpotImages;
+      modifiedEntry.price = Number(entry.price);
      modifiedResult.push(modifiedEntry)
     };
   };
