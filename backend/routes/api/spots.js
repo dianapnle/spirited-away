@@ -130,13 +130,11 @@ const validateSpot = [
         attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
         'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt'],
         include: [
-          { model: SpotImage, attributes: ['url'], where: {preview: true}, required: false},
-          { model: Review, attributes: [], required: false}
-        ],
-       //separates the average to each spot not overall average otherwise:
-       group: ['Spot.id', 'SpotImages.id'],
-       ...pagination
-      });
+          { model: SpotImage, attributes: ['url'], where: {preview: true}, required: false}],
+          group: ['Spot.id'],
+            ...pagination
+          });
+
 
     const modifiedResult = [];
 
