@@ -47,8 +47,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       isNumeric: true,
       validate: {
-        min: {args: -90, msg: "Latitude must be within -90 and 90"},
-        max: {args: 90, msg: 'Latitude must be within -90 and 90'}
+        min: {args: [-90], msg: "Latitude must be within -90 and 90"},
+        max: {args: [90], msg: 'Latitude must be within -90 and 90'}
       }
     },
     lng: {
@@ -56,8 +56,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       isNumeric: true,
       validate: {
-        min: {args: -180, msg: "Longitude must be within -180 and 180"},
-        max: {args: 180, msg: 'Longitude must be within -180 and 180'}
+        min: {args: [-180], msg: "Longitude must be within -180 and 180"},
+        max: {args: [180], msg: 'Longitude must be within -180 and 180'}
       }
     },
     name: {
@@ -77,7 +77,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       isNumeric: true,
       validate: {
-        min: {args: "0.0", msg: "Price per day must be positive"}
+        min: {args: ["0.0"], msg: "Price per day must be positive"}
       }
     }
   }, {

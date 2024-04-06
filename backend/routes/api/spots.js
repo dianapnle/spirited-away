@@ -448,7 +448,7 @@ router.post('/', requireAuth, validateSpot, async (req, res) => {
       lng: spot.lng,
       name: spot.name,
       description: spot.description,
-      price: spot.price,
+      price: Number(spot.price),
       createdAt: await dateConverter(spot.createdAt),
       updatedAt: await dateConverter(spot.updatedAt)
     }
