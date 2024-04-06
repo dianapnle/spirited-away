@@ -184,7 +184,7 @@ router.put("/:bookingId", requireAuth, checkExist, ifUser, hasPast, async (req, 
         startDate: startDate,
         endDate: endDate
       });
-    await testBooking.validate();
+
 
   const conflicts = await Booking.findAll({
     where: {
