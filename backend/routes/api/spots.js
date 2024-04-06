@@ -9,7 +9,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 var Sequelize = require('sequelize');
 
 
-function dateConverter(value) {
+async function dateConverter(value) {
   const convertedDate = new Date(value);
   const currentDay = String(convertedDate.getDate()).padStart(2, "0");
   const currentMonth = String(convertedDate.getMonth() + 1).padStart(2, "0");
@@ -411,6 +411,7 @@ const validateSpot = [
 
       modifiedResult.numReviews = count;
       modifiedResult.avgStarRating = average;
+      modifiedResult.price = Number(spot.price);
       modifiedResult.createdAt = await dateConverter(modifiedResult.createdAt);
       modifiedResult.updatedAt = await dateConverter(modifiedResult.updatedAt);
       res.status(200);
