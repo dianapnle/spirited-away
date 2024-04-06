@@ -9,7 +9,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 
 
-function dateConverter(value) {
+async function dateConverter(value) {
   const convertedDate = new Date(value);
   const currentDay = String(convertedDate.getDate()).padStart(2, "0");
   const currentMonth = String(convertedDate.getMonth() + 1).padStart(2, "0");
@@ -61,7 +61,7 @@ async function authorize(req, res, next) {
       return next(err);
   }
 
-  //pull the owner id to check if it matches with req.user
+  //pull the review id to check if it matches with req.user
   //if it does match -> continue on to next function
   if (req.user.id === search.userId) {
     return next()
@@ -146,9 +146,9 @@ router.put("/:reviewId", requireAuth, checkExist, authorize, validateReview, asy
 
 })
 
-router.post('/:reviewId/images', requireAuth, async (req, res) => {
+router.post('/:reviewId/images', requireAuth, checkExist, authorize, async (req, res) => {
   const reviewId = req.params.reviewId;
-  const count = await ReviewImage.count();
+  const count = await ReviewImage.count( {where: {id: reviewId}});
   //if there are more than 10 review images, throw an error
   if (count >= 10) {
     const err = new Error()
@@ -174,7 +174,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
 
 
 //delete review
-router.delete('/:reviewId', requireAuth, checkExist, async (req, res) => {
+router.delete('/:reviewId', requireAuth, checkExist, authorize, async (req, res) => {
       //use param review id to look for the review
       const reviewId = req.params.reviewId;
        await Review.destroy({
