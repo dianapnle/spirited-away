@@ -712,6 +712,9 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 
     modifiedEntry.startDate = `${startYear}-${startMonth}-${startDay}`;
     modifiedEntry.endDate = `${endYear}-${endMonth}-${endDay}`;
+
+    modifiedEntry.createdAt = await dateConverter(entry.createdAt);
+    modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
     modifiedResult.push(modifiedEntry);
   }
   res.status(200);

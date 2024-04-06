@@ -7,7 +7,7 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-function dateConverter(value) {
+async function dateConverter(value) {
   const convertedDate = new Date(value);
   const currentDay = String(convertedDate.getDate()).padStart(2, "0");
   const currentMonth = String(convertedDate.getMonth() + 1).padStart(2, "0");
@@ -145,7 +145,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
 
 //edit booking
-router.put("/:bookingId", requireAuth, authorize, checkExist, hasPast, async (req, res) => {
+router.put("/:bookingId", requireAuth, checkExist, authorize, hasPast, async (req, res) => {
     //use param review id to look for the review
     const bookingId = req.params.bookingId;
     //grab the startDate and endDate from req.body
