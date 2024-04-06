@@ -136,6 +136,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
      modifiedEntry.startDate = `${startYear}-${startMonth}-${startDay}`;
      modifiedEntry.endDate = `${endYear}-${endMonth}-${endDay}`;
+     modifiedEntry.Spot.price = Number(entry.Spot.price);
 
      modifiedResult.push(modifiedEntry);
    } else {
@@ -155,6 +156,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
      modifiedEntry.createdAt = await dateConverter(entry.createdAt);
      modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+     modifiedEntry.Spot.price = Number(entry.Spot.price);
 
     modifiedResult.push(modifiedEntry);
   }

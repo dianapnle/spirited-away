@@ -116,15 +116,8 @@ const validateSpot = [
       };
 
       //set pagination by default even if not specified
-      let page = Number(page);
-      let size = Number(size);
-
-      //if the given value is not a number OR less than 1, set default to 1
-      if (isNaN(page) || page < 1) page = 1;
-
-      if (isNaN(size) || size < 1) size = 20;
-      // If the size parameter is greater than 20, then the size should be set and limited to 20
-      if (size > 20) size = 20;
+      let page = 1
+      let size = 20
 
 
       const pagination = {};
