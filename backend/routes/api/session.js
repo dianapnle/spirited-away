@@ -78,11 +78,14 @@ router.get(
           email: user.email,
           username: user.username
         };
+        res.status(200);
         return res.json({
           user: safeUser
         });
-      } else return res.json({ user: null });
-    }
+      } else {
+        res.status(200);
+        return res.json({ user: null })
+      }}
   );
 
 
