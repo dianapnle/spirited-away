@@ -133,11 +133,6 @@ const validateSpot = [
           { model: SpotImage, attributes: ['url'], where: {preview: true}, required: false},
           { model: Review, attributes: [], required: false}
         ],
-       attributes: {
-         include: [ // this adds AVG attribute to others instead of rewriting whole body
-        [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating']
-      ]
-       },
        //separates the average to each spot not overall average otherwise:
        group: ['Spot.id', 'SpotImages.id'],
        ...pagination
@@ -147,6 +142,13 @@ const validateSpot = [
 
     for (const entry of spots) {
      const modifiedEntry = entry.toJSON();
+      //find the sum stars and count of each spot using reviews
+          const sumStars = await Review.sum('stars', {
+            where: {spotId: entry.id}
+          })
+          const count = await Review.count({where: {spotId: entry.id}});
+          const average = sumStars/count;
+
      //if images for the spot exist then ->
      if (modifiedEntry.SpotImages.length !== 0) {
        modifiedEntry.previewImage = modifiedEntry.SpotImages[0].url;
@@ -154,12 +156,16 @@ const validateSpot = [
        modifiedEntry.createdAt = await dateConverter(entry.createdAt);
        modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
        modifiedEntry.price = Number(entry.price);
+       modifiedEntry.avgRating = average;
+
        modifiedResult.push(modifiedEntry);
      } else if (modifiedEntry.SpotImages.length === 0){
       modifiedEntry.createdAt = await dateConverter(entry.createdAt);
       modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
       delete modifiedEntry.SpotImages;
       modifiedEntry.price = Number(entry.price);
+      modifiedEntry.avgRating = average;
+
      modifiedResult.push(modifiedEntry)
     };
   };
