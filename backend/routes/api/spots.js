@@ -80,13 +80,11 @@ const validateSpot = [
   check('country')
   .exists({ checkFalsy: true })
   .withMessage('Country is required'),
-  check('lat')
+  check('lat', 'Latitude must be within -90 and 90')
   .exists({ checkFalsy: true })
-  .withMessage('Latitude must be within -90 and 90')
   .isFloat({ min: -90 , max: 90}),
-  check('lng')
+  check('lng', 'Longitude must be within -180 and 180')
   .exists({ checkFalsy: true })
-  .withMessage('Longitude must be within -180 and 180')
   .isFloat( { min: -180 , max: 180}),
   check('name')
   .exists({ checkFalsy: true })
@@ -94,9 +92,8 @@ const validateSpot = [
   check('description')
   .exists({ checkFalsy: true })
   .withMessage('Description is required'),
-  check('price')
+  check('price', 'Price per day must be a positive number')
   .exists({ checkFalsy: true })
-  .withMessage('Price per day must be a positive number')
   .isFloat( {min: 0}),
   handleValidationErrors
 ];
