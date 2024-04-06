@@ -9,20 +9,17 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 
 
-async function dateConverter (value) {
+function dateConverter(value) {
   const convertedDate = new Date(value);
+  const currentDay = String(convertedDate.getDate()).padStart(2, "0");
+  const currentMonth = String(convertedDate.getMonth() + 1).padStart(2, "0");
+  const currentYear = String(convertedDate.getFullYear()).padStart(2, "0");
+  const currentHours = String(convertedDate.getHours()).padStart(2, "0");
+  const currentMinutes = String(convertedDate.getMinutes()).padStart(2, "0");
+  const currentSeconds = String(convertedDate.getSeconds()).padStart(2, "0");
 
-  const currentDay = convertedDate.getDate();
-  const currentMonth = convertedDate.getMonth();
-  const currentYear = convertedDate.getFullYear();
-  const currentHours = convertedDate.getHours();
-  const currentMinutes = convertedDate.getMinutes();
-  const currentSeconds = convertedDate.getSeconds();
-
-  const dateString = `${currentYear}-${currentMonth + 1}-${currentDay} ${currentHours}:${currentMinutes}:${currentSeconds}`;
-  return dateString
-};
-
+  return `${currentYear}-${currentMonth}-${currentDay} ${currentHours}:${currentMinutes}:${currentSeconds}`;
+}
 // The validateSignup middleware is composed of the check and handleValidationErrors middleware
 //   If at least one of the req.body values fail the check, an error will be returned as the response.
 const validateReview = [

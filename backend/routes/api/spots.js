@@ -9,19 +9,17 @@ const { handleValidationErrors } = require('../../utils/validation');
 var Sequelize = require('sequelize');
 
 
-async function dateConverter (value) {
+function dateConverter(value) {
   const convertedDate = new Date(value);
+  const currentDay = String(convertedDate.getDate()).padStart(2, "0");
+  const currentMonth = String(convertedDate.getMonth() + 1).padStart(2, "0");
+  const currentYear = String(convertedDate.getFullYear()).padStart(2, "0");
+  const currentHours = String(convertedDate.getHours()).padStart(2, "0");
+  const currentMinutes = String(convertedDate.getMinutes()).padStart(2, "0");
+  const currentSeconds = String(convertedDate.getSeconds()).padStart(2, "0");
 
-  const currentDay = convertedDate.getDate();
-  const currentMonth = convertedDate.getMonth();
-  const currentYear = convertedDate.getFullYear();
-  const currentHours = convertedDate.getHours();
-  const currentMinutes = convertedDate.getMinutes();
-  const currentSeconds = convertedDate.getSeconds();
-
-  const dateString = `${currentYear}-${currentMonth + 1}-${currentDay} ${currentHours}:${currentMinutes}:${currentSeconds}`;
-  return dateString
-};
+  return `${currentYear}-${currentMonth}-${currentDay} ${currentHours}:${currentMinutes}:${currentSeconds}`;
+}
 
 //validate if spot exists
 async function spotExist (req, res, next) {
@@ -276,6 +274,7 @@ const validateSpot = [
               modifiedEntry.previewImage = modifiedEntry.SpotImages[0].url;
               delete modifiedEntry.SpotImages;
               modifiedEntry.avgRating = average;
+              modifiedEntry.price = Number(entry.price);
               modifiedEntry.createdAt = await dateConverter(entry.createdAt);
               modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
 
@@ -285,6 +284,7 @@ const validateSpot = [
               modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
               delete modifiedEntry.SpotImages;
               modifiedEntry.avgRating = average;
+              modifiedEntry.price = Number(entry.price);
 
               modifiedResult.push(modifiedEntry)
           };
@@ -327,6 +327,7 @@ const validateSpot = [
     // unbox first SpotImage as preview image, if available
      modifiedEntry.previewImage = modifiedEntry.SpotImages[0].url
      delete modifiedEntry.SpotImages;
+     modifiedEntry.price = Number(entry.price);
      modifiedEntry.createdAt = await dateConverter(entry.createdAt);
      modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
      modifiedResult.push(modifiedEntry);
@@ -335,6 +336,7 @@ const validateSpot = [
    delete modifiedEntry.SpotImages;
    modifiedEntry.createdAt = await dateConverter(entry.createdAt);
    modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+   modifiedEntry.price = Number(entry.price);
    modifiedResult.push(modifiedEntry)}
 }
     return res.json({
