@@ -17,12 +17,12 @@ const validateSignup = [
     check('email')
     .exists({ checkFalsy: true })
     .isEmail()
-    .withMessage('Please provide a valid email.'),
+    .withMessage('Invalid email.'),
     //checks if req.body.username is a minimum length of 4 and is not an email
     check('username')
     .exists({ checkFalsy: true })
     .isLength({ min: 4 })
-    .withMessage('Please provide a username with at least 4 characters.'),
+    .withMessage('Username is required'),
     check('username')
     .not()
     .isEmail()
@@ -34,10 +34,10 @@ const validateSignup = [
     .withMessage('Password must be 6 characters or more.'),
     check('firstName')
     .exists({ checkFalsy: true })
-    .withMessage('Must not be empty'),
+    .withMessage('First Name is required'),
     check('lastName')
     .exists({ checkFalsy: true })
-    .withMessage('Must not be empty'),
+    .withMessage('Last Name is required'),
     handleValidationErrors
 ];
 
