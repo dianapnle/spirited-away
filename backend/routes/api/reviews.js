@@ -35,22 +35,9 @@ const validateReview = [
   handleValidationErrors
 ];
 
-async function checkExist (req, res, next) {
-  //use param review id to look for the review
-  const reviewId = req.params.reviewId;
 
-  const search = await Review.findByPk(Number(reviewId));
-  //if there is no review that matches the given reviewid from parameter -> throw an error
-  if (search === null) {
-    const err = new Error();
-    err.message = "Review couldn't be found";
-    err.status = 404;
-    return next(err);
-  }
-return next();
-};
 
-async function authorize(req, res, next) {
+async function authorize (req, res, next) {
   const reviewId = req.params.reviewId;
   const search = await Review.findByPk(Number(reviewId));
   //if there is no review that matches the given reviewid from parameter -> throw an error
@@ -121,7 +108,7 @@ async function authorize(req, res, next) {
 
 
 //edit review
-router.put("/:reviewId", requireAuth, checkExist, authorize, validateReview, async (req, res) => {
+router.put("/:reviewId", requireAuth, authorize, validateReview, async (req, res) => {
   const { review, stars } = req.body;
   //use param review id to look for the review
   const reviewId = req.params.reviewId;
@@ -146,9 +133,9 @@ router.put("/:reviewId", requireAuth, checkExist, authorize, validateReview, asy
 
 })
 
-router.post('/:reviewId/images', requireAuth, checkExist, authorize, async (req, res) => {
+router.post('/:reviewId/images', requireAuth, authorize, async (req, res) => {
   const reviewId = req.params.reviewId;
-  const count = await ReviewImage.count( {where: {id: reviewId}});
+  const count = await ReviewImage.count( {where: { reviewId: reviewId}});
   //if there are more than 10 review images, throw an error
   if (count >= 10) {
     const err = new Error()
@@ -174,7 +161,7 @@ router.post('/:reviewId/images', requireAuth, checkExist, authorize, async (req,
 
 
 //delete review
-router.delete('/:reviewId', requireAuth, checkExist, authorize, async (req, res) => {
+router.delete('/:reviewId', requireAuth, authorize, async (req, res) => {
       //use param review id to look for the review
       const reviewId = req.params.reviewId;
        await Review.destroy({
