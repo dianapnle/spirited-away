@@ -83,6 +83,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Spot',
+    validate: true
   });
   return Spot;
 };
