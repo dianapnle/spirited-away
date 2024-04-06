@@ -82,10 +82,12 @@ const validateSpot = [
   .withMessage('Country is required'),
   check('lat')
   .exists({ checkFalsy: true })
-  .withMessage('Latitude must be within -90 and 90'),
+  .withMessage('Latitude must be within -90 and 90'
+  .isFloat({ min: -90 , max: 90})),
   check('lng')
   .exists({ checkFalsy: true })
-  .withMessage('Longitude must be within -180 and 180'),
+  .withMessage('Longitude must be within -180 and 180')
+  .isFloat( { min: -180 , max: 180}),
   check('name')
   .exists({ checkFalsy: true })
   .withMessage('Name must be less than 50 characters'),
@@ -94,7 +96,8 @@ const validateSpot = [
   .withMessage('Description is required'),
   check('price')
   .exists({ checkFalsy: true })
-  .withMessage('Price per day must be a positive number'),
+  .withMessage('Price per day must be a positive number')
+  .isFloat( {min: 0}),
   handleValidationErrors
 ];
 
