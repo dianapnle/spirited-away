@@ -316,7 +316,7 @@ const validateSpot = [
      [ Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating' ],
     ]},
       //separates the average to each spot not overall average otherwise:
-      group: ['Spot.id']
+      group: ['Spot.id','SpotImages.id']
     });
 
   const modifiedResult = []
