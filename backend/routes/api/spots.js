@@ -8,7 +8,6 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 var Sequelize = require('sequelize');
 
-
 async function dateConverter(value) {
   const convertedDate = new Date(value);
   const currentDay = String(convertedDate.getDate()).padStart(2, "0");
@@ -495,7 +494,7 @@ router.put("/:spotId", requireAuth, validateSpot, validateUser, async (req, res)
     lng: result.lng,
     name: result.name,
     description: result.description,
-    price: result.price,
+    price: Number(result.price),
     createdAt: await dateConverter(result.createdAt),
     updatedAt: await dateConverter(result.updatedAt)});
 
@@ -535,15 +534,16 @@ router.post('/:spotId/images', requireAuth, validateUser, async (req, res) => {
 });
 
 
-// The validateSignup middleware is composed of the check and handleValidationErrors middleware
-//   If at least one of the req.body values fail the check, an error will be returned as the response.
+
 const validateReview = [
-  //It checks to see if there is an address, etc
+
   check('review')
   .exists({ checkFalsy: true })
   .withMessage('Review text is required'),
   check('stars')
   .exists({ checkFalsy: true })
+  .withMessage('Stars must be an integer from 1 to 5')
+  .isInt( {min: 1, max: 5})
   .withMessage('Stars must be an integer from 1 to 5'),
   handleValidationErrors
 ];
