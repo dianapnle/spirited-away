@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      ReviewImage.belongsToMany(models.Review, {foreignkey: "reviewId"})
+      ReviewImage.belongsTo(models.Review, {foreignkey: "reviewId"})
     }
   }
   ReviewImage.init({
