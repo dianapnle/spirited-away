@@ -39,6 +39,28 @@ async function authorize(req, res, next) {
   return next(err);
 };
 
+async function ifUser(req, res, next) {
+  const bookingId = req.params.bookingId;
+  const search = await Booking.findOne({
+      where: {id: Number(bookingId)},
+      include: [{ model: Spot }]
+  });
+
+  //pull the user id to check if it matches with req.user (same person who booked it) or spot owner
+  //if it does match -> continue on to next function
+  if (req.user.id === search.userId) {
+    return next()
+  };
+
+//else throw an authorization error
+const err = new Error('Authorization required');
+err.title = 'Authorization required';
+err.errors = { message: 'Authorization required' };
+err.status = 403;
+return next(err);
+};
+
+
 //validate if booking exist
 async function checkExist (req, res, next) {
     //use param booking id to look for the spot
@@ -82,7 +104,7 @@ async function hasPast (req, res, next) {
 ///get all bookings for current user
 router.get('/current', requireAuth, async (req, res) => {
   const bookings = await Booking.findAll({
-    where: { userId: req.user.id},
+    where: { userId: req.user.id },
     attributes: ['id', 'userId', 'spotId', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
     include: [
       { model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
@@ -144,9 +166,10 @@ router.get('/current', requireAuth, async (req, res) => {
 });
 
 
+
 //edit booking
-router.put("/:bookingId", requireAuth, checkExist, authorize, hasPast, async (req, res) => {
-    //use param review id to look for the review
+router.put("/:bookingId", requireAuth, checkExist, ifUser, hasPast, async (req, res) => {
+    //use param booking id to look for the booking
     const bookingId = req.params.bookingId;
     //grab the startDate and endDate from req.body
     let {startDate, endDate} = req.body;
@@ -184,11 +207,11 @@ if (conflicts.length !== 0) {
   err.errors = {};
 
   for (entry of conflicts) {
-    if (testBooking.startDate <= entry.endDate) {
+    if (testBooking.startDate >= entry.startDate) {
         //add to errors object
         err.errors.startDate = "Start date conflicts with an existing booking"
     }
-    if (testBooking.endDate >= entry.startDate) {
+    if (testBooking.endDate <= entry.endDate) {
         //add to errors object
         err.errors.endDate = "End date conflicts with an existing booking"
     }

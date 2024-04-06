@@ -115,6 +115,24 @@ const validateSpot = [
           return; // exit since we should have processed a response
       };
 
+      //set pagination by default even if not specified
+      let page = Number(page);
+      let size = Number(size);
+
+      //if the given value is not a number OR less than 1, set default to 1
+      if (isNaN(page) || page < 1) page = 1;
+
+      if (isNaN(size) || size < 1) size = 20;
+      // If the size parameter is greater than 20, then the size should be set and limited to 20
+      if (size > 20) size = 20;
+
+
+      const pagination = {};
+      //if there are size and page queries in req -> add to pagination object
+      pagination.limit=size;
+      pagination.offset=size * (page - 1);
+
+
       const spots = await Spot.findAll({
         attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat',
         'lng', 'name', 'description', 'price', 'createdAt', 'updatedAt'],
@@ -128,7 +146,8 @@ const validateSpot = [
       ]
        },
        //separates the average to each spot not overall average otherwise:
-       group: ['Spot.id', 'SpotImages.id']
+       group: ['Spot.id', 'SpotImages.id'],
+       ...pagination
       });
 
     const modifiedResult = [];
@@ -152,7 +171,9 @@ const validateSpot = [
     };
   };
       return res.json({
-        Spots:  modifiedResult
+        Spots:  modifiedResult,
+        page: page,
+        size: size
       });
     });
 
@@ -760,11 +781,11 @@ if (conflicts.length !== 0) {
   err.errors = {};
 
   for (entry of conflicts) {
-    if (newBooking.startDate <= entry.endDate) {
+    if (newBooking.startDate >= entry.startDate) {
         //add to errors object
         err.errors.startDate = "Start date conflicts with an existing booking"
     }
-    if (newBooking.endDate >= entry.startDate) {
+    if (newBooking.endDate <= entry.endDate) {
         //add to errors object
         err.errors.endDate = "End date conflicts with an existing booking"
     }

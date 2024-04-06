@@ -91,11 +91,15 @@ async function authorize (req, res, next) {
        delete modifiedEntry.Spot.SpotImages;
        modifiedEntry.createdAt = await dateConverter(entry.createdAt);
        modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+       modifiedEntry.price = Number(entry.price);
+
        modifiedResult.push(modifiedEntry);
      } else {
        delete modifiedEntry.Spot.SpotImages;
        modifiedEntry.createdAt = await dateConverter(entry.createdAt);
        modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+       modifiedEntry.price = Number(entry.price);
+
      modifiedResult.push(modifiedEntry)
     }
   }
