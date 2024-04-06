@@ -96,7 +96,8 @@ app.use((err, _req, res, _next) => {
   };
 
   let prodJson = {
-    message: err.message
+    message: err.message,
+    errors: err.errors,
   };
 
   res.status(err.status || 500);
