@@ -1,7 +1,7 @@
 //holds route paths to /api/bookings
 const express = require('express');
 const { Op } = require('sequelize');
-const { Booking, Spot } = require('../../db/models');
+const { Booking, Spot, SpotImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 const { check } = require('express-validator');
@@ -81,7 +81,69 @@ async function hasPast (req, res, next) {
     return next();
 };
 
+///get all bookings for current user
+router.get('/current', requireAuth, async (req, res) => {
+  const bookings = await Booking.findAll({
+    where: { userId: req.user.id},
+    attributes: ['id', 'userId', 'spotId', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
+    include: [
+      { model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
+        include: { model: SpotImage,
+          attributes: ['url'],
+          where: {preview: true},
+          required: false} }]
+  });
 
+  const modifiedResult = []
+  for (const entry of bookings) {
+   const modifiedEntry = entry.toJSON();
+   //if images for the spot exist then ->
+   if (modifiedEntry.Spot.SpotImages.length !== 0) {
+     modifiedEntry.Spot.previewImage = modifiedEntry.Spot.SpotImages[0].url
+     delete modifiedEntry.Spot.SpotImages;
+     modifiedEntry.createdAt = await dateConverter(entry.createdAt);
+     modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+
+     let startDate = new Date(modifiedEntry.startDate.toString())
+     let startYear = startDate.getUTCFullYear()
+     let startMonth = String(startDate.getUTCMonth() + 1).padStart(2,'0');
+     let startDay = String(startDate.getUTCDate()).padStart(2, '0');
+
+     let endDate = new Date(modifiedEntry.endDate.toString())
+     let endYear = endDate.getUTCFullYear();
+     let endMonth = String(endDate.getUTCMonth() + 1).padStart(2,'0');
+     let endDay = String(endDate.getUTCDate()).padStart(2, '0');
+
+     modifiedEntry.startDate = `${startYear}-${startMonth}-${startDay}`;
+     modifiedEntry.endDate = `${endYear}-${endMonth}-${endDay}`;
+
+     modifiedResult.push(modifiedEntry);
+   } else {
+     delete modifiedEntry.Spot.SpotImages;
+     let startDate = new Date(modifiedEntry.startDate.toString())
+     let startYear = startDate.getUTCFullYear()
+     let startMonth = String(startDate.getUTCMonth() + 1).padStart(2,'0');
+     let startDay = String(startDate.getUTCDate()).padStart(2, '0');
+
+     let endDate = new Date(modifiedEntry.endDate.toString())
+     let endYear = endDate.getUTCFullYear();
+     let endMonth = String(endDate.getUTCMonth() + 1).padStart(2,'0');
+     let endDay = String(endDate.getUTCDate()).padStart(2, '0');
+
+     modifiedEntry.startDate = `${startYear}-${startMonth}-${startDay}`;
+     modifiedEntry.endDate = `${endYear}-${endMonth}-${endDay}`;
+
+     modifiedEntry.createdAt = await dateConverter(entry.createdAt);
+     modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+
+    modifiedResult.push(modifiedEntry);
+  }
+}
+    return res.json({
+      Bookings:  modifiedResult
+    });
+
+});
 
 
 //edit booking
@@ -178,8 +240,7 @@ router.delete('/:bookingId', requireAuth, checkExist, authorize, async (req, res
     //remove the Z so the value is in local time
     //turn the startDate into a string
     let startISOString = search.startDate.toISOString();
-    let endISOString = search.endDate.toISOString();
-    let localEndDate = new Date(endISOString.substring(0, endISOString.length-1))
+
     //then take up to the z and then convert that to a new date object to compare to current object w/o time stamp
     let localStartDate = new Date(startISOString.substring(0, startISOString.length-1))
 

@@ -76,10 +76,11 @@ async function authorize(req, res, next) {
   return next(err);
 }
 
-///////////////////////////////////////////
-    // get all reviews
+
+///// get all reviews of current user
     router.get('/current', requireAuth, async (req, res) => {
       const reviews = await Review.findAll({
+        where: { userId: req.user.id},
         attributes: ['id', 'userId', 'spotId', 'review', 'stars', 'createdAt', 'updatedAt'],
         include: [
           { model: User, attributes: ['id', 'firstName', 'lastName']},

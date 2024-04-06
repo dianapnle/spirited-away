@@ -368,7 +368,7 @@ const validateSpot = [
       ]
     });
 
-    modifiedReviews = [];
+    let modifiedReviews = [];
     for (entry of reviews) {
       const modifiedEntry = entry.toJSON();
         modifiedEntry.createdAt = await dateConverter(entry.createdAt);
@@ -615,6 +615,101 @@ async function notOwner (req, res, next) {
     err.status = 403;
     return next(err);
   };
+
+////////////////////////////////////////////////////////
+//get all bookings of a spot based on the Spot's id
+router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
+  //use param spot id to look for the spot
+  const { spotId } = req.params;
+  const search = await Spot.findByPk(Number(spotId));
+
+  //if there is no spot that matches the given spotid from parameter -> throw an error first
+  if (search === null) {
+      const err = new Error()
+      err.message = "Spot couldn't be found";
+      res.status(404);
+      return res.json({
+        message: err.message
+    })
+  };
+
+  //if the req.user.id is also the owner of the spot
+      if(req.user.id === search.ownerId) {
+        //call next function that handles if req user is owner of spot
+        next(); // call next handler in chain that handles this condition
+        return; // exit since we should have processed a response
+    };
+
+  //else if not req.user.id is NOT the owner of the spot
+  const bookings = await Booking.findAll({
+    where: {
+        spotId: spotId
+    },
+    attributes: ['spotId', 'startDate', 'endDate']
+  });
+
+  let modifiedResult = [];
+
+  for (entry of bookings) {
+    const modifiedEntry = entry.toJSON();
+    let startDate = new Date(modifiedEntry.startDate.toString())
+    let startYear = startDate.getUTCFullYear()
+    let startMonth = String(startDate.getUTCMonth() + 1).padStart(2,'0');
+    let startDay = String(startDate.getUTCDate()).padStart(2, '0');
+
+    let endDate = new Date(modifiedEntry.endDate.toString())
+    let endYear = endDate.getUTCFullYear();
+    let endMonth = String(endDate.getUTCMonth() + 1).padStart(2,'0');
+    let endDay = String(endDate.getUTCDate()).padStart(2, '0');
+
+    modifiedEntry.startDate = `${startYear}-${startMonth}-${startDay}`;
+    modifiedEntry.endDate = `${endYear}-${endMonth}-${endDay}`;
+    modifiedResult.push(modifiedEntry);
+  }
+  res.status(200);
+  return res.json({
+    Bookings: modifiedResult
+  });
+});
+
+//get all bookings if the req.user is ALSO the spot's owner
+router.get('/:spotId/bookings', requireAuth, async (req, res) => {
+  //use param spot id to look for the spot
+  const { spotId } = req.params;
+
+  const bookings = await Booking.findAll({
+      where: {
+        spotId: spotId
+    },
+    attributes: ['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt'],
+    include: [{ model: User, attributes: ['id', 'firstName', 'lastName']}]
+  });
+
+  let modifiedResult = [];
+
+  for (entry of bookings) {
+    const modifiedEntry = entry.toJSON();
+    let startDate = new Date(modifiedEntry.startDate.toString())
+    let startYear = startDate.getUTCFullYear()
+    let startMonth = String(startDate.getUTCMonth() + 1).padStart(2,'0');
+    let startDay = String(startDate.getUTCDate()).padStart(2, '0');
+
+    let endDate = new Date(modifiedEntry.endDate.toString())
+    let endYear = endDate.getUTCFullYear();
+    let endMonth = String(endDate.getUTCMonth() + 1).padStart(2,'0');
+    let endDay = String(endDate.getUTCDate()).padStart(2, '0');
+
+    modifiedEntry.startDate = `${startYear}-${startMonth}-${startDay}`;
+    modifiedEntry.endDate = `${endYear}-${endMonth}-${endDay}`;
+    modifiedResult.push(modifiedEntry);
+  }
+  res.status(200);
+  return res.json({
+    Bookings: modifiedResult
+  });
+})
+
+
 
 
 //create a booking for a post based on spot's id
