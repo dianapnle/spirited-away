@@ -175,11 +175,20 @@ const validateSpot = [
 
     async function validateQueryParams (req, res, next) {
       //this middle ware validates each query parameter if they exist
-      let {minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+      let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
       const err = new Error();
       err.message ="Bad Request";
       err.errors = {};
 
+      if (page) {
+        if (page < 1 ) {
+          err.errors.minLat = "Page must be greater than or equal to 1";
+        }};
+
+      if (size) {
+        if (size < 1 ) {
+          err.errors.minLat = "Size must be greater than or equal to 1";
+        }};
 
       if (minLat) {
         minLat = Number(minLat);
