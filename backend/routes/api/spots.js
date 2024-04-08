@@ -182,12 +182,12 @@ const validateSpot = [
 
       if (page) {
         if (page < 1 ) {
-          err.errors.minLat = "Page must be greater than or equal to 1";
+          err.errors.page = "Page must be greater than or equal to 1";
         }};
 
       if (size) {
         if (size < 1 ) {
-          err.errors.minLat = "Size must be greater than or equal to 1";
+          err.errors.size = "Size must be greater than or equal to 1";
         }};
 
       if (minLat) {
