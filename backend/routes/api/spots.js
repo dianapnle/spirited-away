@@ -55,9 +55,8 @@ async function validateUser (req, res, next) {
     if (req.user.id === search.ownerId) {
       return next()
     }
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization required';
-    err.errors = { message: 'Authorization required' };
     err.status = 403;
     return next(err);
   };
@@ -638,9 +637,8 @@ async function notOwner (req, res, next) {
       return next();
     };
 
-    const err = new Error('Authorization required');
+    const err = new Error('Forbidden');
     err.title = 'Authorization error';
-    err.errors = { message: 'Cannot book own spot' };
     err.status = 403;
     return next(err);
   };

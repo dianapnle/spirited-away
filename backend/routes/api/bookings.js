@@ -32,9 +32,8 @@ async function authorize(req, res, next) {
     };
 
   //else throw an authorization error
-  const err = new Error('Authorization required');
+  const err = new Error('Forbidden');
   err.title = 'Authorization required';
-  err.errors = { message: 'Authorization required' };
   err.status = 403;
   return next(err);
 };
@@ -53,9 +52,8 @@ async function ifUser(req, res, next) {
   };
 
 //else throw an authorization error
-const err = new Error('Authorization required');
+const err = new Error('Forbidden');
 err.title = 'Authorization required';
-err.errors = { message: 'Authorization required' };
 err.status = 403;
 return next(err);
 };
