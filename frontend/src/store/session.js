@@ -39,13 +39,34 @@ export const login = (user) => async dispatch => {
   }
 
   //thunk action creator to restore user
-export const restoreUser = () => async dispatch => {
+export const restoreUser = () => async (dispatch) => {
     //fetch the current api/session user credentials that is logged in
-
     const response = await csrfFetch(`/api/session`);
     if (response.ok) {
         const data = await response.json();
         dispatch(loginUser(data.user))
+        return response;
+    }
+}
+
+//thunk action creator to sign up user to the backend
+export const signup = (user) => async (dispatch) => {
+    //extract the needed params from the input
+    const { username, firstName, lastName, email, password } = user
+    const response = await csrfFetch(`/api/users`, {
+        method: "POST",
+        body: JSON.stringify({
+            username,
+            firstName,
+            lastName,
+            email,
+            password
+        })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        dispatch(loginUser(data.user));
         return response;
     }
 }
