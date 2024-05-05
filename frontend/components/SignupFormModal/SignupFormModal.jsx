@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import * as sessionActions from '../../src/store/session';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useDispatch} from 'react-redux';
+import { useModal } from '../../src/context/Modal';
 import './SignupForm.css';
 
-function SignupFormPage () {
+function SignupFormModal () {
     const dispatch = useDispatch();
     //if there is a logged in user, reload page
-    const sessionUser = useSelector((state) => state.session.user);
 
     const [ username, setUsername ] = useState("")
     const [ firstName, setFirstName ] = useState("");
@@ -16,29 +15,31 @@ function SignupFormPage () {
     const [ password, setPassword ] = useState("");
     const [ confirmPassword, setConfirmPassword ] = useState("");
     const [ errors, setErrors ] = useState({});
-
-    if (sessionUser) return <Navigate to="/" replace={true}/>;
+    const { closeModal } = useModal();
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (password === confirmPassword) {
-            setErrors({});
-            return dispatch(
-                sessionActions.signup({
-                    email,
-                    username,
-                    firstName,
-                    lastName,
-                    password
-                })
-            ).catch(async (res) => {
-                const data = await res.json();
-                if (data?.errors) {
-                    setErrors(data.errors);
-                }
+          setErrors({});
+          return dispatch(
+            sessionActions.signup({
+              email,
+              username,
+              firstName,
+              lastName,
+              password
             })
+          )
+            .then(closeModal)
+            .catch(async (res) => {
+              const data = await res.json();
+              if (data?.errors) {
+                setErrors(data.errors);
+              }
+            });
         }
+        
         return setErrors({
             confirmPassword: "Passwords do not match"
         })
@@ -107,4 +108,4 @@ function SignupFormPage () {
         </>
     )
 }
-export default SignupFormPage;
+export default SignupFormModal;
