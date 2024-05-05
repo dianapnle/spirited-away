@@ -63,10 +63,20 @@ export const signup = (user) => async (dispatch) => {
             password
         })
     });
-
     if (response.ok) {
         const data = await response.json();
         dispatch(loginUser(data.user));
+        return response;
+    }
+}
+
+//thunk action creator to log out the user
+export const logout = () => async (dispatch) => {
+    const response = await csrfFetch('/api/session', {
+        method: "DELETE"
+    })
+    if (response.ok) {
+        dispatch(logoutUser());
         return response;
     }
 }
