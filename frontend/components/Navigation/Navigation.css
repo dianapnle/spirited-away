@@ -65,3 +65,7 @@
     float: right;
     margin: 10px;
 }
+
+.dropdown:hover {
+    background-color: #F0F0F0;
+}

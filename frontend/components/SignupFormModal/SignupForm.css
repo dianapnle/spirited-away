@@ -1,0 +1,11 @@
+
+.form {
+    padding: 10px;
+    height: 300px;
+    width: 200px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+}

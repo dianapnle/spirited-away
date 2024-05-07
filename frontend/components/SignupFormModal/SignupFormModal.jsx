@@ -39,7 +39,7 @@ function SignupFormModal () {
               }
             });
         }
-        
+
         return setErrors({
             confirmPassword: "Passwords do not match"
         })
@@ -47,64 +47,84 @@ function SignupFormModal () {
 
     return (
         <>
+        <div className={`form`}>
         <h1>Sign Up</h1>
         <form onSubmit={handleSubmit}>
-            <label>Username
+          <div>
+            <label>
             <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                placeholder='Username'
           />
             </label>
             {errors.username && <p>{errors.username}</p>}
-            <label>First Name
+          </div>
+            <div>
+            <label>
             <input
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
+                placeholder='First Name'
           />
             </label>
             {errors.firstName && <p>{errors.firstName}</p>}
-            <label>Last Name
+            </div>
+            <div>
+            <label>
             <input
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
+                placeholder='Last Name'
           />
             </label>
             {errors.lastName && <p>{errors.lastName}</p>}
-            <label>Email
+            </div>
+            <div>
+            <label>
             <input
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                placeholder='Email'
             />
             </label>
             {errors.email && <p>{errors.email}</p>}
-            <label>Password
+            </div>
+            <div>
+            <label>
             <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                placeholder='Password'
           />
             </label>
             {errors.password && <p>{errors.password}</p>}
-            <label>Confirm Password
+            </div>
+            <div>
+            <label>
             <input
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                placeholder='Confirm Password'
           />
             </label>
             {errors.confirmPassword&& <p>{errors.confirmPassword}</p>}
-            <button type="submit">Sign Up</button>
+            </div>
+            <button type="submit">Continue</button>
         </form>
+        </div>
         </>
     )
 }
