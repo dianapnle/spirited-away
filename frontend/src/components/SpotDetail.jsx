@@ -11,7 +11,7 @@ function SpotDetail () {
 
     useEffect(() => {
         dispatch(getSpotDetail(spotId))
-    }, [spotId])
+    }, [spotId, dispatch])
 
     return (
         <>

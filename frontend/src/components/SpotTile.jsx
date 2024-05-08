@@ -23,7 +23,7 @@ function SpotTile ({spot}) {
         </div>
         </>
     )
-};
+}
 
 
 export default SpotTile;
