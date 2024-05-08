@@ -12,7 +12,7 @@ const DETAIL = "spots/DETAIL";
 
 const getDetail = spot => ({
     type: DETAIL,
-    spot
+    payload: spot
 })
 
 
@@ -58,7 +58,9 @@ const spotsReducer = (state = initialState, action) => {
         const newState = {
             ...state
         };
-        newState.byId[action.spot.id] = action.spot
+        const spot = action.payload;
+        newState.byId[spot.id] = spot
+        // console.log("newstate", newState)
         return newState
       }
       default:

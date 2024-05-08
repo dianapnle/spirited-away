@@ -1,22 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getSpotDetail } from "../store/spots";
 
 function SpotDetail () {
     const {spotId} = useParams();
-    const spot = useSelector(state => state.spots.byId[spotId]);
+    const id = Number(spotId)
+    const spot = useSelector(state => state.spots.byId[id]);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getSpotDetail(spotId))
-    }, [spotId, dispatch])
+        dispatch(getSpotDetail(id)).then(() => {
+            setIsLoaded(true)
+        })
+    }, [id, dispatch, isLoaded])
+
 
     return (
         <>
-        <h2>{spot.name}</h2>
-        <div>{spot.spotImages}</div>
+        <h2>{spot?.name}</h2>
+        <div>
+            {spot?.SpotImages && spot.SpotImages.map((img) => (
+        <img key={`spotImg${img.id}`}style={{height: "200px"}} src={img.url}/>
+        ))}
+        </div>
         </>
     )
 }
