@@ -43,29 +43,29 @@ const stateobj = {
         allIds : [spot1.id, spot2.id]
     },
 
-    users: {
-        byId : {
-            user1 : {
-                id : user1.id,
-                firstName: user1.firstName,
-                lastName: user1.lastName,
-                email: user1.email,
-                username: user1.username,
-                spots : [spot1.id],
-                reviews: [review1.id]
-            },
-            user2 : {
-                id : user2.id,
-                firstName: user2.firstName,
-                lastName: user2.lastName,
-                email: user2.email,
-                username: user2.username,
-                spots : [spot2.id],
-                reviews: [review2.id]
-            }
-        },
-        allIds : [user1.id, user2.id]
-    },
+    // users: {
+    //     byId : {
+    //         user1 : {
+    //             id : user1.id,
+    //             firstName: user1.firstName,
+    //             lastName: user1.lastName,
+    //             email: user1.email,
+    //             username: user1.username,
+    //             spots : [spot1.id],
+    //             reviews: [review1.id]
+    //         },
+    //         user2 : {
+    //             id : user2.id,
+    //             firstName: user2.firstName,
+    //             lastName: user2.lastName,
+    //             email: user2.email,
+    //             username: user2.username,
+    //             spots : [spot2.id],
+    //             reviews: [review2.id]
+    //         }
+    //     },
+    //     allIds : [user1.id, user2.id]
+    // },
     reviews: {
         byId : {
             review1 : {

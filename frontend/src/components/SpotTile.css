@@ -1,0 +1,20 @@
+
+.spotsimg {
+    height: 200px;
+    width: 200px
+}
+
+.spotscontainer{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: auto
+}
+
+.spotitem {
+
+}
+
+.spotTileContainer{
+    height: 400px;
+    width: 400px;
+}
