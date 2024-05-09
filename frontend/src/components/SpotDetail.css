@@ -1,0 +1,47 @@
+.imgContainer {
+    display: inline-block
+}
+.preview  {
+
+}
+
+.otherimg {
+
+}
+
+.overallContainer {
+    width: 1000px;
+}
+
+
+.reserve-button {
+    background-color: #fd5c63;
+    color: white;
+    box-shadow: 1px 1px 1px black;
+    width: 250px;
+    height: 30px;
+}
+
+.pricing-block {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.child {
+    display: inline-block;
+    padding: 20px
+}
+.body {
+    display: flex;
+    justify-content: space-between;
+}
+
+.reserve-area {
+    display: flex;
+    justify-content: center;
+}
+.paragraph {
+
+}

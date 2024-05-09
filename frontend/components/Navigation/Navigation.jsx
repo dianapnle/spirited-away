@@ -13,11 +13,18 @@ function Navigation({ isLoaded }) {
       <div className={`home-block`}>
         <NavLink to="/" className={`home-button`}><img src={logo} style={{ height: "50px"}}/></NavLink>
       </div>
+      <div>
+      {isLoaded && sessionUser && (
+        <div className={`profile-block profile-area`}>
+          <NavLink to="/spots/new" className={`create-spot-link`}>Create a New Spot</NavLink>
+        </div>
+      )}
       {isLoaded && (
-        <div className={`profile-block`}>
+        <div className={`profile-block profile-area`}>
           <ProfileButton user={sessionUser} />
         </div>
       )}
+      </div>
     </div>
   );
 }

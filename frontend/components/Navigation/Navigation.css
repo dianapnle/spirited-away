@@ -51,18 +51,18 @@
 }
 
 .overall-block {
-    display: inline;
+    display: flex;
+    justify-content: space-between;
 }
+.profile-area {
+    display: inline-block;
 
+}
 .home-block {
-    display: inline;
-    float:left;
     margin: 10px;
 }
 
 .profile-block {
-    display: inline;
-    float: right;
     margin: 10px;
 }
 
