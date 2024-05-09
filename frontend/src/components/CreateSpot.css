@@ -38,3 +38,12 @@
 .errors{
     color:red
 }
+
+.description-box {
+    display:flex;
+    width: 500px;
+    height: 100px;
+    box-sizing: border-box;
+    background-color: rgb(201, 216, 236);
+    text-align: justify;
+}

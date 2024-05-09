@@ -4,10 +4,6 @@
 }
 
 
-.home-button {
-
-}
-
 .profile-button {
     border-radius: 25px;
     border: 1px solid rgb(167, 159, 159);
@@ -32,11 +28,6 @@
     background: white;
 }
 
-.profile-area {
-    display: flex;
-    justify-content: right;
-    align-self: center;
-}
 
 .menu {
     display: inline;
@@ -54,10 +45,11 @@
     display: flex;
     justify-content: space-between;
 }
+
 .profile-area {
     display: inline-block;
-
 }
+
 .home-block {
     margin: 10px;
 }
@@ -68,4 +60,10 @@
 
 .dropdown:hover {
     background-color: #F0F0F0;
+}
+
+.dropdowntest{
+    width: 100px;
+    border: 1px solid black;
+    display: block;
 }
