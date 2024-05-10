@@ -10,7 +10,14 @@
 }
 
 .overallContainer {
+    display: inline-block;
     width: 1000px;
+    position: relative;
+    /* Move the element to the right by 50% of the container's width */
+    left: 50%;
+    /* Calculates 50% of the element's width, and moves it by that */
+    /* amount across the X-axis to the left */
+    transform: translateX(-50%);
 }
 
 

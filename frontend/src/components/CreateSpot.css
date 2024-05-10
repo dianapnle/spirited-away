@@ -1,14 +1,10 @@
 .form-container {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: 500px;
     margin: auto;
+    width: 500px;
 }
 
 .create-spot-button {
-    display: center;
     width: 100px;
     background-color: #fd5c63;
     color: white;
@@ -21,7 +17,6 @@
 .input-container{
     display: flex;
     justify-content: center;
-    align-content: center;
 }
 
 .input-box{
@@ -45,5 +40,5 @@
     height: 100px;
     box-sizing: border-box;
     background-color: rgb(201, 216, 236);
-    text-align: justify;
+    border: 2px black solid;
 }

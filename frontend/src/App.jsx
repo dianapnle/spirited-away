@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider, Outlet, useNavigate, Link } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet} from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import * as sessionActions from "./store/session";
@@ -10,7 +10,7 @@ import CreateSpotForm from "./components/CreateSpot";
 function Layout () {
   const dispatch = useDispatch();
   const [ isLoaded, setIsLoaded ] = useState(false);
-  const navigate= useNavigate();
+
 
    useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {

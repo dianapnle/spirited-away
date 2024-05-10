@@ -10,7 +10,7 @@ const load = spots => ({
 
 const DETAIL = "spots/DETAIL";
 
-const getDetail = spot => ({
+const getDetail = (spot) => ({
     type: DETAIL,
     payload: spot
 })
@@ -24,15 +24,23 @@ export const getSpots = () => async (dispatch) =>  {
             //object with key value of array for Spots
             const spots = list.Spots;
             dispatch(load(spots))
-            return response
+            return spots
         }
 }
 
-export const getSpotDetail= (spotId) => async (dispatch) => {
-        const response = await csrfFetch(`/api/spots/${spotId}`)
+export const getSpotDetail= (id) => async (dispatch) => {
+        const response = await csrfFetch(`/api/spots/${id}`)
         if (response.ok) {
             const spot = await response.json();
+            if (spot.SpotImages) {
+              for (const img of spot.SpotImages) {
+                if (img.preview === true){
+                  spot['previewImage'] = img.url
+                }
+              }
+            }
             dispatch(getDetail(spot));
+            return spot
         }
 }
 
@@ -46,7 +54,34 @@ export const createSpot = (payload) => async dispatch => {
   if (response.ok) {
     const spot = await response.json();
     dispatch(getDetail(spot));
+    return spot
   }
+}
+
+export const createPreviewImg = (payload) => async dispatch => {
+    const response = await csrfFetch(`/api/spots/${payload.spotId}/images`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(payload)
+  });
+
+  if (response.ok) {
+    const previewImg = await response.json();
+    return previewImg
+  }
+}
+
+export const createSpotImg = (payload) => async dispatch => {
+  const response = await csrfFetch(`/api/spots/${payload.spotId}/images`, {
+  method: "POST",
+  headers: {"Content-Type": "application/json"},
+  body: JSON.stringify(payload)
+});
+
+if (response.ok) {
+  const spotImg = await response.json();
+  return spotImg
+}
 }
 
 const initialState = {
@@ -72,7 +107,6 @@ const spotsReducer = (state = initialState, action) => {
         };
         const spot = action.payload;
         newState.byId[spot.id] = spot
-        // console.log("newstate", newState)
         return newState
       }
       default:
