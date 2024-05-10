@@ -19,3 +19,8 @@
     height: 400px;
     width: 400px;
 }
+
+.child {
+    display: flex;
+    justify-content: center;
+}

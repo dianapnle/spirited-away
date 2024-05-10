@@ -7,9 +7,12 @@ import * as sessionActions from '../../src/store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
+import { NavLink } from 'react-router-dom';
+import { getCurrentUserSpots } from '../../src/store/spots';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
@@ -42,6 +45,11 @@ function ProfileButton({ user }) {
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
+  const handleSubmit = async () => {
+              await dispatch(getCurrentUserSpots())
+
+  };
+
   return (
     <>
     <div className={`profile-button`}>
@@ -60,9 +68,9 @@ function ProfileButton({ user }) {
       <div className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <div>{user.username}</div>
-            <div>{user.firstName} {user.lastName}</div>
+            <div>Hello, {user.firstName}</div>
             <div>{user.email}</div>
+            <div><NavLink to="/spots/current" onClick={handleSubmit()} className={`manage-spots-link`}>Manage Spots</NavLink></div>
             <div>
               <button onClick={logout}>Log Out</button>
             </div>

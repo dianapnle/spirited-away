@@ -42,7 +42,7 @@ function SpotDetail () {
             </div>
             <div className={`child`}>
                 {spot?.avgStarRating === null
-                ? <div>★ 0.0 · {spot?.numReviews} reviews</div>
+                ? <div>★ New</div>
                 : <div>★ {spot?.avgStarRating} · {spot?.numReviews} reviews</div>
                 }
                 </div>

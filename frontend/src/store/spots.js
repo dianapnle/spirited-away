@@ -18,7 +18,33 @@ const getDetail = (spot) => ({
 
 //thunk action creator
 export const getSpots = () => async (dispatch) =>  {
-        const response = await csrfFetch('/api/spots');
+        // const response = await csrfFetch('/api/spots');
+        // if (response.ok) {
+        //     const list = await response.json();
+        //     //object with key value of array for Spots
+        //     const spots = list.Spots;
+        //     dispatch(load(spots))
+        //     return spots
+        // }
+    let done = false;
+    let page = 1;
+    while(!done) {
+      const response = await csrfFetch(`/api/spots?page=${page}`);
+      if (response.ok) {
+        const list = await response.json();
+        //object with key value of array for Spots
+        const spots = list.Spots;
+        dispatch(load(spots))
+        if(spots.length === 0) {
+          done = true
+      }
+      page += 1;
+   }
+}
+}
+
+export const getCurrentUserSpots = () => async (dispatch) => {
+        const response = await csrfFetch('/api/spots/current');
         if (response.ok) {
             const list = await response.json();
             //object with key value of array for Spots
@@ -56,7 +82,23 @@ export const createSpot = (payload) => async dispatch => {
     dispatch(getDetail(spot));
     return spot
   }
-}
+};
+
+export const editSpot = (payload) => async dispatch => {
+  const response = await csrfFetch(`/api/spots/${spotId}`, {
+    method: "PUT",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(payload)
+  });
+
+  if (response.ok) {
+    const spot = await response.json();
+    dispatch(getDetail(spot));
+    return spot
+  }
+};
+
+
 
 export const createPreviewImg = (payload) => async dispatch => {
     const response = await csrfFetch(`/api/spots/${payload.spotId}/images`, {
