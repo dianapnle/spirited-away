@@ -85,7 +85,7 @@ export const createSpot = (payload) => async dispatch => {
 };
 
 export const editSpot = (payload) => async dispatch => {
-  const response = await csrfFetch(`/api/spots/${spotId}`, {
+  const response = await csrfFetch(`/api/spots/${payload.id}`, {
     method: "PUT",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(payload)
@@ -100,7 +100,7 @@ export const editSpot = (payload) => async dispatch => {
 
 
 
-export const createPreviewImg = (payload) => async dispatch => {
+export const createPreviewImg = (payload) => async () => {
     const response = await csrfFetch(`/api/spots/${payload.spotId}/images`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
@@ -113,7 +113,7 @@ export const createPreviewImg = (payload) => async dispatch => {
   }
 }
 
-export const createSpotImg = (payload) => async dispatch => {
+export const createSpotImg = (payload) => async () => {
   const response = await csrfFetch(`/api/spots/${payload.spotId}/images`, {
   method: "POST",
   headers: {"Content-Type": "application/json"},

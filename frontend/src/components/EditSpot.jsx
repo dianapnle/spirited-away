@@ -141,7 +141,7 @@ const EditSpotForm = () => {
         return (
             <section className="form-container">
               <form className="create-spots-form" onSubmit={handleSubmit}>
-                <h2>Udpate your Spot</h2>
+                <h2>Update your Spot</h2>
                 <label>
                     <h3>Where&apos;s your place located?</h3>
                     <p>Guests will only get your exact address once they book a reservation.</p>
