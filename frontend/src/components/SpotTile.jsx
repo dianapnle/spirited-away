@@ -13,7 +13,7 @@ function SpotTile ({spot}) {
         <>
         <div className={`spotTileContainer`}>
         <div className={`spotitem`}>
-        <Link to={`spots/${spot.id}`}> <img className={`spotsimg`} src={`${spot.previewImage}`}/> </Link>
+        <Link to={`/spots/${spot.id}`}> <img className={`spotsimg`} src={`${spot.previewImage}`}/> </Link>
         <div>
         <p>{spot.city}, {spot.state}</p>
         <div>★ {spot.avgRating}</div>

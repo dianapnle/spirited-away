@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { editSpot, createPreviewImg, createSpotImg } from '../store/spots';
 import './CreateSpot.css'
 
@@ -8,20 +8,49 @@ const EditSpotForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const sessionUser = useSelector(state => state.session.user);
-            const [country, setCountry] = useState('');
-            const [address, setAddress] = useState('');
-            const [city, setCity] = useState('');
-            const [state, setState] = useState('');
-            const [lat, setLatitude] = useState('');
-            const [lng, setLongitude] = useState('');
-            const [description, setDescription] = useState('');
-            const [name, setName] = useState('');
-            const [price, setPrice] = useState('');
-            const [previewImg, setPreviewImg] = useState('');
-            const [spotImg1, setSpotImg1] = useState('');
-            const [spotImg2, setSpotImg2] = useState('');
-            const [spotImg3, setSpotImg3] = useState('');
-            const [spotImg4, setSpotImg4] = useState('');
+    const {spotId} = useParams();
+    //grab the spot details stored in db to prepopulate the form
+
+    // let specificSpot = dispatch(getSpotDetail(spotId));
+    // let savedCountry = specificSpot.country;
+    // let savedAddress = specificSpot.address;
+    // let savedCity = specificSpot.city
+    // let savedState = specificSpot.state;
+    // let savedLat = specificSpot.lat;
+    // let savedLng = specificSpot.lng;
+    // let savedDescription = specificSpot.description;
+    // let savedName = specificSpot.name;
+    // let savedPrice = specificSpot.price;
+    // let savedPreview;
+
+    // let otherImages = [];
+
+    // let savedSpotImages = specificSpot.spotImages;
+
+    // for (const img of savedSpotImages) {
+    //   if (img.preview === true) {
+    //     savedPreview = img.url
+    //    } else if (img.preview === false) {
+    //        otherImages.push(img.url)
+    //    }
+    // }
+    //  let [savedSpotImg1, savedSpotImg2, savedSpotImg3, savedSpotImg4] = otherImages
+
+
+            const [country, setCountry] = useState();
+            const [address, setAddress] = useState();
+            const [city, setCity] = useState();
+            const [state, setState] = useState();
+            const [lat, setLatitude] = useState();
+            const [lng, setLongitude] = useState();
+            const [description, setDescription] = useState();
+            const [name, setName] = useState();
+            const [price, setPrice] = useState();
+            const [previewImg, setPreviewImg] = useState();
+            const [spotImg1, setSpotImg1] = useState();
+            const [spotImg2, setSpotImg2] = useState();
+            const [spotImg3, setSpotImg3] = useState();
+            const [spotImg4, setSpotImg4] = useState();
             const [hasSubmitted, setHasSubmitted] = useState(false)
             const [ errors, setErrors ] = useState({})
 
@@ -64,7 +93,7 @@ const EditSpotForm = () => {
                       }, [country, address, city, state, lat, lng, description, name, price, previewImg, spotImg1, spotImg2, spotImg3, spotImg4])
 
     if (sessionUser) {
-        const {id} = sessionUser
+        const {id} = sessionUser;
 
 
         const handleSubmit = async (e) => {
@@ -92,7 +121,7 @@ const EditSpotForm = () => {
               //   navigate(`/spots/${res.id}`)
               // })
 
-              let createdSpot = await (dispatch(editSpot(spotPayload)))
+              let createdSpot = await (dispatch(editSpot(spotPayload, spotId)))
 
               if (createdSpot) {
                 const id = createdSpot.id;

@@ -47,7 +47,6 @@ function ProfileButton({ user }) {
 
   const handleSubmit = async () => {
               await dispatch(getCurrentUserSpots())
-
   };
 
   return (
@@ -70,7 +69,7 @@ function ProfileButton({ user }) {
           <>
             <div>Hello, {user.firstName}</div>
             <div>{user.email}</div>
-            <div><NavLink to="/spots/current" onClick={handleSubmit()} className={`manage-spots-link`}>Manage Spots</NavLink></div>
+            <div><NavLink to="/spots/current" onClick={handleSubmit} className={`manage-spots-link`}>Manage Spots</NavLink></div>
             <div>
               <button onClick={logout}>Log Out</button>
             </div>

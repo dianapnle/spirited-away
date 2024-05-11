@@ -12,8 +12,20 @@ import { useNavigate } from 'react-router-dom';
 function ManageSpotsBrowser () {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const sessionUser = useSelector(state => state.session.user);
     const spots = useSelector(state => state.spots.byId);
+    const filteredSpots = [];
+
+    if (!sessionUser) {
+        navigate('/')
+    }
+
+    for (const spot of Object.values(spots)) {
+        if (sessionUser && sessionUser.id === spot.ownerId) {
+            filteredSpots.push(spot)
+        }
+    }
+
     const [isLoaded, setIsLoaded ] = useState(false);
 
     useEffect(() => {
@@ -26,7 +38,7 @@ function ManageSpotsBrowser () {
         <>
         <h2></h2>
         <div className={`spotscontainer`}>
-        { Object.values(spots).map((spot) => (
+        { Object.values(filteredSpots).map((spot) => (
             <>
             <div>
             <SpotTile key={`${spot.id}`} spot={spot} />
