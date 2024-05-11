@@ -47,7 +47,7 @@ function SpotDetail () {
                 }
                 </div>
                 <div className={`reserve-area`}>
-                <button className={`reserve-button`}> Reserve</button>
+                <button onClick={() => { alert("Feature coming soon");}}className={`reserve-button`}> Reserve</button>
                 </div>
             </div></div>
         </div>

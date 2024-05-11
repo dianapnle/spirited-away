@@ -1,19 +1,20 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 function SpotTile ({spot}) {
+    const navigate = useNavigate();
 
     if (!spot.previewImage) {
         spot.previewImage=`https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png`
     }
     if (!spot.avgRating) {
-        spot.avgRating=5
+        spot.avgRating=0.0
     }
 
     return (
         <>
-        <div className={`spotTileContainer`}>
+        <div onClick={() => {navigate(`/spots/${spot.id}`)}} className={`spotTileContainer`}>
         <div className={`spotitem`}>
-        <Link to={`/spots/${spot.id}`}> <img className={`spotsimg`} src={`${spot.previewImage}`}/> </Link>
+        <img className={`spotsimg`} src={`${spot.previewImage}`}/>
         <div>
         <p>{spot.city}, {spot.state}</p>
         <div>★ {spot.avgRating}</div>

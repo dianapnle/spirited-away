@@ -9,6 +9,8 @@
     grid-template-columns: repeat(4, 1fr);
     margin: 0 auto;
     text-align: center;
+    justify-content: center;
+    max-width: 1000px;
 }
 
 .spotitem {
@@ -16,8 +18,9 @@
 }
 
 .spotTileContainer{
-    height: 400px;
+    height: 320px;
     width: 400px;
+    border: 1px black solid;
 }
 
 .child {
