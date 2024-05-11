@@ -212,7 +212,7 @@ const CreateSpotForm = () => {
                   <br></br>
                 <label>
                     <h3>Describe your place to guests</h3>
-                    <p>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborbhood.</p>
+                    <p>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood.</p>
                 <textarea
                   placeholder='Description'
                   className="description-box"

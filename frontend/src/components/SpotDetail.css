@@ -41,8 +41,8 @@
     padding: 20px
 }
 .body {
-    display: flex;
-    justify-content: space-between;
+    display: inline-flex;
+    gap: 135px;
 }
 
 .reserve-area {

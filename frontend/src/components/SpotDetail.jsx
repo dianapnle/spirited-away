@@ -24,6 +24,7 @@ function SpotDetail () {
         <div className={`overallContainer`}>
         <h2>{spot?.name}</h2>
         <h3>{spot?.city} {spot?.state} {spot?.country}</h3>
+        <br></br>
         <div className={`imgContainer`}>
             {spot?.SpotImages && spot.SpotImages.map((img) => (
                 (img.preview === true)
@@ -46,6 +47,7 @@ function SpotDetail () {
                 : <div>★ {spot?.avgStarRating} · {spot?.numReviews} reviews</div>
                 }
                 </div>
+                <br></br>
                 <div className={`reserve-area`}>
                 <button onClick={() => { alert("Feature coming soon");}}className={`reserve-button`}> Reserve</button>
                 </div>

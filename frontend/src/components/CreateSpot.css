@@ -5,14 +5,24 @@
 }
 
 .create-spot-button {
+    display: inline-block;
     width: 100px;
     background-color: #fd5c63;
     color: white;
     box-shadow: 1px 1px 3px black;
-    width: 100px;
+    width: fit-content;
     height: 30px;
 }
 
+.update-spot-button {
+    display: inline-block;
+    width: 100px;
+    background-color: #fd5c63;
+    color: white;
+    box-shadow: 1px 1px 3px black;
+    width: fit-content;
+    height: 30px;
+}
 
 .input-container{
     display: flex;
