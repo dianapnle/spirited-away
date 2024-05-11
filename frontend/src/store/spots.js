@@ -15,6 +15,13 @@ const getDetail = (spot) => ({
     payload: spot
 })
 
+const REMOVE = "spots/REMOVE"
+
+const remove = (spotId) => ({
+  type: REMOVE,
+  spotId
+})
+
 
 //thunk action creator
 export const getSpots = () => async (dispatch) =>  {
@@ -126,9 +133,23 @@ if (response.ok) {
 }
 }
 
+
+export const deleteSpot = (spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`, {
+  method: "DELETE"
+});
+  if (response.ok) {
+    const spot = await response.json();
+    dispatch(remove(spotId));
+    return spot
+}
+}
+
 const initialState = {
     byId: {}
-}
+};
+
+
 
 //action reducer
 const spotsReducer = (state = initialState, action) => {
@@ -150,6 +171,11 @@ const spotsReducer = (state = initialState, action) => {
         const spot = action.payload;
         newState.byId[spot.id] = spot
         return newState
+      }
+      case REMOVE: {
+        const newState = { ...state };
+        delete newState.byId[action.spotId];
+        return newState;
       }
       default:
         return state;

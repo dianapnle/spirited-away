@@ -6,6 +6,8 @@ import { getCurrentUserSpots } from '../store/spots.js';
 import SpotTile from './SpotTile.jsx';
 import './SpotTile.css'
 import { useNavigate } from 'react-router-dom';
+import OpenModalButton from './DeleteSpotModal/OpenModalDeleteSpot';
+import DeleteSpotModal from './DeleteSpotModal/DeleteSpotModal';
 
 
 function ManageSpotsBrowser () {
@@ -44,7 +46,8 @@ function ManageSpotsBrowser () {
             <>
             <div>
             <SpotTile onClick={() => {navigate(`/spots/${spot.id}`)}} key={`${spot.id}`} spot={spot} />
-            <div><span><button key={`update-${spot.id}`} onClick={() => {navigate(`/spots/${spot.id}/edit`)}}>Update</button> <button key={`delete-${spot.id}`}>Delete</button></span></div>
+            <div><span><button key={`update-${spot.id}`} onClick={() => {navigate(`/spots/${spot.id}/edit`)}}>Update</button>
+            <OpenModalButton modalComponent={<DeleteSpotModal spotId={spot.id}/>}/></span></div>
             </div>
             </>
         ))}
