@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState} from 'react';
 import * as sessionActions from '../../src/store/session';
 import { useDispatch} from 'react-redux';
 import { useModal } from '../../src/context/Modal';
@@ -12,6 +12,16 @@ function LoginFormModal () {
     const [ errors, setErrors ] = useState({});
     const { closeModal } = useModal();
 
+
+
+    const toggle = () => {
+      if (credential.length < 4 || password.length < 6) {
+        return true
+      }
+      return false
+    }
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrors({});
@@ -23,6 +33,7 @@ function LoginFormModal () {
               setErrors(data.errors);
             }
           });
+
       };
 
     return (
@@ -53,7 +64,7 @@ function LoginFormModal () {
             </label>
             </div>
             {errors.credential && <p>{errors.credential}</p>}
-            <button type="submit">Log In</button>
+            <button type="submit" disabled={toggle()}>Log In</button>
         </form>
         </div>
         </>
