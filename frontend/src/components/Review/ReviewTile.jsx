@@ -21,7 +21,7 @@ function ReviewTile ({review, spotId}) {
         </div>
         <p className={`review-date`}>{monthNames[date.getMonth()]} {date.getFullYear()}</p>
         <p className={`review-body`}>{review?.review}</p>
-        {sessionUser.id === review.userId && <div><OpenModalButton modalComponent={<DeleteReviewModal reviewId={review.id} spotId={spotId}/>}/></div>}
+        {sessionUser?.id === review.userId && <div><OpenModalButton modalComponent={<DeleteReviewModal reviewId={review.id} spotId={spotId}/>}/></div>}
         </div>
         </div>
         </>
