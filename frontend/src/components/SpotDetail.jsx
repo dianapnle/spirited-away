@@ -5,6 +5,8 @@ import { getSpotDetail } from "../store/spots";
 import { getCurrentSpotReviews } from "../store/reviews";
 import ReviewTile from "./Review/ReviewTile";
 import './SpotDetail.css'
+import OpenModalReviewButton from "./Review/OpenModalReviewButton";
+import PostReviewModal from "./Review/PostReviewModal";
 
 function SpotDetail () {
     const {spotId} = useParams();
@@ -77,7 +79,7 @@ function SpotDetail () {
             <br></br>
             <div className={'post-review-area'}>
                 {sessionUser && sessionUser.id !== spot?.ownerId && existingReview.length === 0 &&
-                    <div><button className={`post-review-button`}>Post Your Review</button><br></br>Be the first to post a review!</div>
+                    <div><OpenModalReviewButton modalComponent={<PostReviewModal className={`post-review-modal`} spotId={id}/>}/><br></br>Be the first to post a review!</div>
                 }
             </div>
             <div className={`reviewscontainer`}>

@@ -32,7 +32,6 @@ function LoginFormModal () {
             if (data && data.message) {
               setErrors({message: data.message});
             }
-            console.log(data.message)
           });
       };
 
