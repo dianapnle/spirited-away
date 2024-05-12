@@ -8,6 +8,13 @@ const load = reviews => ({
     payload: reviews
 });
 
+const REMOVE = "reviews/REMOVE"
+
+const remove = (reviewId) => ({
+  type: REMOVE,
+  reviewId
+})
+
 const sortList = (list) => {
     return list.sort((reviewA, reviewB) => {
         var c = new Date(reviewA.updatedAt).getTime();
@@ -39,6 +46,20 @@ export const createReview = (payload, spotId) => async () => {
     }
 }
 
+
+export const deleteReview = (reviewId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+  method: "DELETE"
+});
+  if (response.ok) {
+    const spot = await response.json();
+    dispatch(remove(reviewId));
+    return spot
+}
+}
+
+
+
 const initialState = {
     byId: {},
     sortedReviews: []
@@ -57,6 +78,15 @@ const reviewReducer = (state = initialState, action) => {
           ...state,
           sortedReviews: sortList(action.payload)
         };
+      }
+      case REMOVE: {
+        const newState = { ...state };
+        const newById = {...state.byId };
+        const newSortedReviews = state.sortedReviews.filter(review=> review.id != action.reviewId)
+        delete newById[action.reviewId]
+        newState.byId = newById;
+        newState.sortedReviews = newSortedReviews
+        return newState;
       }
       default:
         return state;

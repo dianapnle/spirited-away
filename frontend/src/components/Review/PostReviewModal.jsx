@@ -35,7 +35,7 @@ function PostReviewModal ({ spotId }) {
         }
 
         return dispatch((createReview(payload, spotId)))
-        .then(dispatch(getCurrentSpotReviews(spotId)))
+        .then(() => dispatch(getCurrentSpotReviews(spotId)))
         .then(closeModal)
         .catch(async (res) => {
             const data = await res.json();
@@ -44,7 +44,6 @@ function PostReviewModal ({ spotId }) {
             }
         })
       };
-
 
 
 
