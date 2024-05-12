@@ -38,15 +38,21 @@ function ManageSpotsBrowser () {
     return (
         <>
         <div>
+        <div className={`header`}>
         <h2>Manage Spots</h2>
-        {filteredSpots.length !== 0 && <span><button onClick={() => {navigate(`/spots/new`)}} className={`create-spots-button`}>Create a New Spot</button></span>}
+        {filteredSpots.length !== 0 && <div><button onClick={() => {navigate(`/spots/new`)}} className={`create-spots-button`}>Create a New Spot</button></div>}
+        </div>
+        <br></br>
+        <br></br>
+        <br></br>
         <div className={`spotscontainer`}>
         {filteredSpots.length === 0 && <div>No Spots Currently Owned! <div><button onClick={() => {navigate(`"/spots/new`)}} className={`create-spots-button`}>Create a New Spot</button></div></div>}
         {Object.values(filteredSpots).map((spot) => (
             <>
             <div>
             <SpotTile onClick={() => {navigate(`/spots/${spot.id}`)}} key={`${spot.id}`} spot={spot} />
-            <div><span><button key={`update-${spot.id}`} onClick={() => {navigate(`/spots/${spot.id}/edit`)}}>Update</button>
+            <br></br>
+            <div className={`buttons-area`}><span><button className={`update-button`} key={`update-${spot.id}`} onClick={() => {navigate(`/spots/${spot.id}/edit`)}}>Update</button>
             <OpenModalButton modalComponent={<DeleteSpotModal spotId={spot.id}/>}/></span></div>
             </div>
             </>

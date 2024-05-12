@@ -17,7 +17,7 @@ function SpotTile ({spot}) {
         <img className={`spotsimg`} src={`${spot.previewImage}`}/>
         <div>
         <p>{spot.city}, {spot.state}</p>
-        <div>★ {spot.avgRating}</div>
+        <div>★ {spot.avgRating.toFixed(1)}</div>
         <p>${spot.price.toFixed(2)} night</p>
         </div>
         </div>

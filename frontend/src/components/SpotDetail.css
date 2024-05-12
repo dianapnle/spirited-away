@@ -20,6 +20,9 @@
     transform: translateX(-50%);
 }
 
+.spots-area{
+   padding-bottom: 25px;
+}
 
 .reserve-button {
     background-color: #fd5c63;
@@ -32,7 +35,7 @@
 .pricing-block {
     border: 2px solid black;
     border-radius: 10px;
-    padding: 10px;
+    padding: 5px;
     box-sizing: border-box;
 }
 
@@ -42,13 +45,45 @@
 }
 .body {
     display: inline-flex;
-    gap: 135px;
+    gap: 200px;
 }
 
 .reserve-area {
     display: flex;
     justify-content: center;
 }
-.paragraph {
 
+.reviewscontainer {
+    width: 100%;
+    height: 100%;
+}
+
+.reviewItem {
+    width: 100%;
+    height: 100%;
+    border: 1px black solid;
+}
+
+
+.reviews-star {
+ font-size: 20px;
+ font-weight: bold;
+}
+
+.reviews-area {
+    display: block;
+}
+
+.post-review-area {
+    border: 1px white solid
+}
+
+.post-review-button {
+    display: inline-block;
+    width: 100px;
+    background-color: #323232;
+    color: white;
+    box-shadow: 1px 1px 4px black;
+    width: fit-content;
+    height: 30px;
 }

@@ -27,3 +27,33 @@
     display: flex;
     justify-content: center;
 }
+
+.update-button {
+    display: inline-block;
+    width: 100px;
+    background-color: #323232;
+    color: white;
+    box-shadow: 1px 1px 4px black;
+    width: fit-content;
+    height: 30px;
+}
+
+.buttons-area {
+
+}
+
+.header{
+    display: inline-block;
+    justify-content: start;
+    max-width: 1000px;
+    padding-left: 90px;
+}
+
+.create-spots-button {
+    width: 100px;
+    background-color: #4b4949;
+    color: white;
+    box-shadow: 1px 1px 4px black;
+    width: fit-content;
+    height: 30px;
+}

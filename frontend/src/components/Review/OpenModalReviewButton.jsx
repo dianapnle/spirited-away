@@ -1,8 +1,7 @@
 // import React from 'react';
 import { useModal } from '../../context/Modal'
-import './DeleteSpotModal.css'
 
-function OpenModalButton({
+function OpenModalReviewButton({
   modalComponent, // component to render inside the modal
 }) {
   const { setModalContent } = useModal();
@@ -13,9 +12,9 @@ function OpenModalButton({
 
   return (
     <div>
-        <button className={`delete-button`} onClick={onClick}>Delete</button>
+        <button className={`post-review-button`} onClick={onClick}>Post Your Review</button>
     </div>
   );
 }
 
-export default OpenModalButton;
+export default OpenModalReviewButton;

@@ -8,3 +8,8 @@
     align-content: center;
     text-align: center;
 }
+
+
+.errors {
+    color: rgb(245, 53, 53);
+}

@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import * as sessionActions from '../../src/store/session';
 import { useDispatch} from 'react-redux';
 import { useModal } from '../../src/context/Modal';
@@ -29,11 +29,11 @@ function LoginFormModal () {
           .then(closeModal)
           .catch(async (res) => {
             const data = await res.json();
-            if (data && data.errors) {
-              setErrors(data.errors);
+            if (data && data.message) {
+              setErrors({message: data.message});
             }
+            console.log(data.message)
           });
-
       };
 
     return (
@@ -63,7 +63,7 @@ function LoginFormModal () {
             />
             </label>
             </div>
-            {errors.credential && <p>{errors.credential}</p>}
+            {errors.message && <p className={`errors`}>The provided credentials were invalid.</p>}
             <button type="submit" disabled={toggle()}>Log In</button>
         </form>
         </div>
