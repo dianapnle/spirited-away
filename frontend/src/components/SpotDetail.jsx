@@ -78,13 +78,16 @@ function SpotDetail () {
             </div>
             <br></br>
             <div className={'post-review-area'}>
-                {sessionUser && sessionUser.id !== spot?.ownerId && existingReview.length === 0 &&
+                {sessionUser && sessionUser.id !== spot?.ownerId && existingReview.length === 0 && reviews.length ===0 &&
                     <div><OpenModalReviewButton modalComponent={<PostReviewModal className={`post-review-modal`} spotId={id}/>}/><br></br>Be the first to post a review!</div>
+                }
+                {sessionUser && sessionUser.id !== spot?.ownerId && existingReview.length === 0 && reviews.length !== 0 &&
+                    <div><OpenModalReviewButton modalComponent={<PostReviewModal className={`post-review-modal`} spotId={id}/>}/><br></br></div>
                 }
             </div>
             <div className={`reviewscontainer`}>
                 {reviews && Object.values(reviews).map((review) => (
-                    <div key={`${review.id}`}><ReviewTile key={`review-${review.id}`} className={`reviewItem`} review={review} /></div>
+                    <div key={`${review.id}`}><ReviewTile key={`review-${review.id}`} className={`reviewItem`} review={review} spotId={id} /></div>
                 ))}
             </div>
             </div>

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import OpenModalButton from '../DeleteSpotModal/OpenModalDeleteSpot';
 import DeleteReviewModal from './DeleteReviewModal.jsx'
 
-function ReviewTile ({review}) {
+function ReviewTile ({review, spotId}) {
     const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
@@ -21,7 +21,7 @@ function ReviewTile ({review}) {
         </div>
         <p className={`review-date`}>{monthNames[date.getMonth()]} {date.getFullYear()}</p>
         <p className={`review-body`}>{review?.review}</p>
-        {sessionUser.id === review.userId && <div><OpenModalButton modalComponent={<DeleteReviewModal reviewId={review.id}/>}/></div>}
+        {sessionUser.id === review.userId && <div><OpenModalButton modalComponent={<DeleteReviewModal reviewId={review.id} spotId={spotId}/>}/></div>}
         </div>
         </div>
         </>

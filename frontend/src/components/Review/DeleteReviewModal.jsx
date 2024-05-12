@@ -2,15 +2,13 @@ import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import { deleteReview } from '../../store/reviews';
 import { getSpotDetail } from '../../store/spots';
-import { useParams } from 'react-router-dom'
 import './ReviewSpotModal.css'
 
 
-function DeleteReviewModal ({ reviewId }) {
+function DeleteReviewModal ({ reviewId, spotId }) {
     const dispatch = useDispatch();
 
     const { closeModal } = useModal();
-    const { spotId } = useParams;
     const deleteSubmit = (e) => {
         e.preventDefault();
         return dispatch((deleteReview(reviewId)))

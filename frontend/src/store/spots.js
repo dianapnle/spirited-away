@@ -165,11 +165,9 @@ const spotsReducer = (state = initialState, action) => {
         };
       }
       case DETAIL: {
-        const newState = {
-            ...state
-        };
-        const spot = action.payload;
-        newState.byId[spot.id] = spot
+        const newState = structuredClone(state);
+        const spot = action.payload; // unpack payload
+        newState.byId[spot.id] = spot;
         return newState
       }
       case REMOVE: {

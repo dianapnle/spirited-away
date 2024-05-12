@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useModal } from '../../context/Modal';
 import { getCurrentSpotReviews, createReview } from '../../store/reviews';
+import { getSpotDetail } from '../../store/spots';
 import './PostReviewModal.css'
 
 
@@ -36,6 +37,7 @@ function PostReviewModal ({ spotId }) {
 
         return dispatch((createReview(payload, spotId)))
         .then(() => dispatch(getCurrentSpotReviews(spotId)))
+        .then(() => dispatch(getSpotDetail(spotId)))
         .then(closeModal)
         .catch(async (res) => {
             const data = await res.json();
