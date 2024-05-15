@@ -93,7 +93,7 @@ function SpotDetail () {
             <br></br>
             <div className={'post-review-area'}>
                 {sessionUser && sessionUser.id !== spot?.ownerId && existingReview.length === 0 && reviews.length ===0 &&
-                    <div><OpenModalReviewButton modalComponent={<PostReviewModal className={`post-review-modal`} spotId={id}/>}/><br></br>Be the first to post a review!</div>
+                    <div className={`post-review-child`}><OpenModalReviewButton modalComponent={<PostReviewModal className={`post-review-modal`} spotId={id}/>}/><br></br>Be the first to post a review!</div>
                 }
                 {sessionUser && sessionUser.id !== spot?.ownerId && existingReview.length === 0 && reviews.length !== 0 &&
                     <div><OpenModalReviewButton modalComponent={<PostReviewModal className={`post-review-modal`} spotId={id}/>}/><br></br></div>

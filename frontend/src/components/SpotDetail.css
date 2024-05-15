@@ -107,6 +107,8 @@
 
 .reviews-area {
     display: block;
+    border-top: 3px solid rgb(88, 84, 42);
+    margin-top: 20px;
 }
 
 .post-review-button {
@@ -121,4 +123,8 @@
 
 hr {
     border: rgb(88, 84, 42)
+}
+
+.post-review-child{
+    margin-top: 10px;
 }
