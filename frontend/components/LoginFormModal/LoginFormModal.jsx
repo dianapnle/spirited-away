@@ -24,6 +24,7 @@ function LoginFormModal () {
     const demoUser = () => {
       const credential = 'demousername';
       const password = 'ilikebananas1';
+      setErrors({});
       return dispatch(sessionActions.login({ credential, password }))
       .then((closeModal))
     }
