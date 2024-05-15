@@ -13,6 +13,7 @@
     height: 20px;
 }
 
+
 .menu-icons {
     display: flex;
     justify-content: center;
@@ -47,7 +48,32 @@
 }
 
 .profile-area {
-    display: inline-block;
+    display: inline-flex;
+}
+
+.createspotlink {
+    align-content: center;
+}
+
+.ulClassName {
+    display: block;
+}
+
+
+.profileButtonBox{
+    margin-right: 30px;
+    justify-self: flex-end;
+    position: relative;
+}
+
+.profileButtonList {
+    position: absolute;
+    background: white;
+    width: 150px;
+    right: 0.1%;
+    z-index: 1;
+    border: 1px solid black;
+    text-align: center;
 }
 
 .home-block {
@@ -60,10 +86,5 @@
 
 .dropdown:hover {
     background-color: #F0F0F0;
-}
-
-.dropdowntest{
-    width: 100px;
-    border: 1px solid black;
-    display: block;
+    cursor: pointer;
 }

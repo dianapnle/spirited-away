@@ -2,10 +2,16 @@
 .spotsimg {
     width: 100%;
     height: 248px;
-    border: 2px solid black;
 }
 
-
+.spotscontainer{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(max(300px, 23%), 1fr));
+    margin: 0 auto;
+    max-width: 80%;
+    justify-content: center;
+    grid-gap: 10px;
+}
 
 .spotitem {
 
@@ -21,31 +27,6 @@
     justify-content: center;
 }
 
-.location{
-    font-size: 15px;
-}
-
-.rating {
-    font-size: 15px
-}
-
-.top-text {
-    width: 100%;
-    display: inline-flex;
-    justify-content: space-between;
-}
-
-.price {
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.bottom-text {
-    width: 100%;
-    display: inline-flex;
-    gap: 2px;
-}
-
 .update-button {
     display: inline-block;
     width: 100px;
@@ -56,9 +37,8 @@
     height: 30px;
 }
 
-.spotTileContainer {
-    cursor: pointer;
-    height: 320px
+.buttons-area {
+
 }
 
 .header{
@@ -76,15 +56,3 @@
     width: fit-content;
     height: 30px;
 }
-
-.tooltip:hover:before {
-    display:block;
-    content: attr(data-text); /* here's the magic */
-    position:absolute;
-    width: 100px;
-    padding: 5px;
-    border-radius:10px;
-    background:#000;
-    color: #fff;
-    text-align:center;
-  }

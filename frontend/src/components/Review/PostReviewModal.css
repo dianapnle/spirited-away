@@ -37,7 +37,3 @@
 .star {
     font-size: 35px;;
 }
-
-button:disabled{
-    background-color: grey;
-}

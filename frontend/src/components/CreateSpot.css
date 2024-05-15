@@ -27,21 +27,24 @@
 .input-container{
     display: flex;
     justify-content: center;
+    border: 2px black solid;
 }
 
 .input-box{
     width: 500px;
     box-sizing: border-box;
     background-color: rgb(201, 216, 236);
+    border: 2px black solid;
 }
 .price-input-box {
     width: 485px;
     box-sizing: border-box;
     background-color: rgb(201, 216, 236);
+    border: 2px black solid;
 }
 
 .errors{
-    color:red
+    color: #fd5c63
 }
 
 .description-box {

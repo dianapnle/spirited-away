@@ -21,6 +21,12 @@ function LoginFormModal () {
       return false
     }
 
+    const demoUser = () => {
+      const credential = 'demousername';
+      const password = 'ilikebananas1';
+      return dispatch(sessionActions.login({ credential, password }))
+      .then((closeModal))
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -37,33 +43,38 @@ function LoginFormModal () {
 
     return (
         <>
-        <div className={`form`}>
+        <div className={`form login`}>
         <h1>Log In</h1>
+        {errors.message && <div className={`errors`}>The provided credentials were invalid.</div>}
+          <br></br>
         <form onSubmit={handleSubmit}>
           <div>
             <label>
             <input
+                className={`userinput`}
                 type="text"
                 value={credential}
                 onChange={(e) => setCredential(e.target.value)}
-                required
                 placeholder='Username or Email'
           />
             </label>
             </div>
+            <br></br>
             <div>
             <label>
             <input
+               className={`passwordinput`}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
                 placeholder='Password'
             />
             </label>
             </div>
-            {errors.message && <p className={`errors`}>The provided credentials were invalid.</p>}
-            <button type="submit" disabled={toggle()}>Log In</button>
+            <br></br>
+            <button className={`loginButton`}type="submit" disabled={toggle()}>Log In</button>
+            <br></br>
+            <button className={`demouserbutton`} onClick={demoUser}>Demo User</button>
         </form>
         </div>
         </>

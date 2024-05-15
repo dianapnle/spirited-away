@@ -1,0 +1,28 @@
+.menu-items:hover {
+    cursor: pointer;
+}
+
+.both-icons:hover {
+    cursor: pointer;
+}
+
+.login-dropdown{
+    cursor: pointer
+}
+
+.signup-dropdown{
+    cursor: pointer
+}
+
+.login-dropdown {
+    border: 1px solid black;
+    padding: 5px;
+    border-top: none;
+}
+
+.signup-dropdown{
+    border: 1px solid black;
+    padding: 5px;
+    border-bottom: none;
+
+}

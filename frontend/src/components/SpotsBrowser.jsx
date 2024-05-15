@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { getSpots } from '../store/spots.js';
 import SpotTile from   './SpotTile.jsx';
-import './SpotTile.css'
+import './SpotsBrowser.css'
 
 
 function SpotsBrowser () {

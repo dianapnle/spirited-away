@@ -25,6 +25,14 @@ function SpotDetail () {
         }
     }
 
+    let filteredImages= spot?.SpotImages && spot.SpotImages.filter((img) => img.preview === false)
+    let preview = spot?.previewImage
+    let img1= filteredImages?.length >= 1 && filteredImages[0].url;
+    let img2 = filteredImages?.length >= 2 && filteredImages[1].url;
+    let img3 = filteredImages?.length >= 3 && filteredImages[2].url;
+    let img4 = filteredImages?.length >= 4 && filteredImages[3].url;
+
+
     useEffect(() => {
         dispatch(getSpotDetail(id))
         .then(dispatch(getCurrentSpotReviews(id)))
@@ -39,35 +47,41 @@ function SpotDetail () {
         <div className={`overallContainer`}>
         <div className={`spots-area`}>
         <h2>{spot?.name}</h2>
-        <h3>{spot?.city} {spot?.state} {spot?.country}</h3>
+        <h3>{spot?.city}, {spot?.state}, {spot?.country}</h3>
         <br></br>
         <div className={`imgContainer`}>
-            {spot?.SpotImages && spot.SpotImages.map((img) => (
-                (img.preview === true)
-                ? <img key={`spotImg${img.id}`}style={{height: "400px"}} src={img.url}/>
-                :  <img key={`spotImg${img.id}`}style={{height: "200px"}} src={img.url}/>
-        ))}
+                <img className={`previewImage spotImage`} src={preview} />
+                {img1 && <img className={`spotImage`} src={img1} />}
+                {img2 && <img className={`spotImage`} src={img2} />}
+                {img3 && <img className={`spotImage`} src={img3} />}
+                {img4 && <img className={`spotImage`} src={img4} />}
         </div>
+        <br></br>
+        <div className={`spot-details`}>
         <div className={`body`}>
             <div className={`paragraph`}>
                 <div>Hosted by {spot?.Owner && spot?.Owner.firstName} {spot?.Owner && spot?.Owner.lastName}</div>
                 <p>{spot?.description}</p>
                 </div>
-        <div className={`pricing-block`}>
-            <div className={`child`}>
-            ${spot?.price} night
+                <div className={`pricing-block`}>
+                    <div className={`pricing-grid`}>
+                        <span>
+                        <span className={`price-bold`}>${spot?.price}</span> night
+                        </span>
+                        <span className={`pricing-stars`}>
+                            {spot?.avgStarRating === null
+                            ? <div>★ New</div>
+                            : <span>★ {spot?.avgStarRating} · {spot?.numReviews === 1 ? <span>{spot?.numReviews} review</span> : <span> {spot?.numReviews} reviews</span> } </span>
+                            }
+                        </span>
+                    </div>
+                    <div className={`reserve-area`}>
+                        <button onClick={() => { alert("Feature coming soon");}}className={`reserve-button`}> Reserve</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className={`child`}>
-                {spot?.avgStarRating === null
-                ? <div>★ New</div>
-                : <span>★ {spot?.avgStarRating} · {spot?.numReviews === 1 ? <span>{spot?.numReviews} review</span> : <span> {spot?.numReviews} reviews</span> } </span>
-                }
-                </div>
-                <br></br>
-                <div className={`reserve-area`}>
-                <button onClick={() => { alert("Feature coming soon");}}className={`reserve-button`}> Reserve</button>
-                </div>
-            </div></div></div>
+            </div>
             <div className={`reviews-area`}>
                 <hr></hr>
             <div className={`reviews-star`}>
