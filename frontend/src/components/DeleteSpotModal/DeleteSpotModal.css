@@ -13,7 +13,7 @@
 .delete-button {
     display: inline-block;
     width: 100px;
-    background-color: #323232;
+    background-color: #8a8787;
     color: white;
     box-shadow: 1px 1px 4px black;
     width: fit-content;
@@ -35,7 +35,7 @@
 .no-post-button {
     display: inline-block;
     width: 100px;
-    background-color: #323232;
+    background-color: #8a8787;
     color: white;
     box-shadow: 2px 3px 5px black;
     width: 100%;

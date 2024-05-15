@@ -64,16 +64,18 @@
     margin-right: 30px;
     justify-self: flex-end;
     position: relative;
+
 }
 
 .profileButtonList {
     position: absolute;
     background: white;
     width: 150px;
-    right: 0.1%;
+    right: 0.3%;
     z-index: 1;
     border: 1px solid black;
     text-align: center;
+    padding: 10px;
 }
 
 .home-block {
@@ -82,6 +84,15 @@
 
 .profile-block {
     margin: 10px;
+}
+
+.logout-button{
+    border-radius: 25px;
+    border: 2px solid rgb(13, 13, 13);
+    background: rgb(130, 128, 128);
+    width: 80px;
+    height: 30px;
+    color: white;
 }
 
 .dropdown:hover {

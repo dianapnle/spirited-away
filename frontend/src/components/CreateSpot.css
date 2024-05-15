@@ -9,9 +9,10 @@
     width: 100px;
     background-color: #fd5c63;
     color: white;
-    box-shadow: 1px 1px 3px black;
+    box-shadow: 2px 3px 5px black;
     width: fit-content;
     height: 30px;
+    margin-bottom: 30px;
 }
 
 .update-spot-button {
@@ -19,15 +20,15 @@
     width: 100px;
     background-color: #fd5c63;
     color: white;
-    box-shadow: 1px 1px 3px black;
+    box-shadow: 2px 3px 5px black;
     width: fit-content;
     height: 30px;
+    margin-bottom: 30px;
 }
 
 .input-container{
     display: flex;
     justify-content: center;
-    border: 2px black solid;
 }
 
 .input-box{

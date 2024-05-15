@@ -1,8 +1,10 @@
-
-.form {
+.form.signup {
+    border-radius: 15px 15px 15px 15px;;
+    border: 5px solid rgb(255, 255, 255);
+    background: white;
     padding: 10px;
-    height: 300px;
-    width: 200px;
+    height: 350px;
+    width: 300px;
     display: block;
     justify-content: center;
     align-items: center;
@@ -15,7 +17,7 @@
     color: #fd5c63;
 }
 
-button:disabled.loginButton{
+button:disabled.signupButton{
     background-color: white;
     color: rgb(131, 129, 129);
     width: 100%;
@@ -23,18 +25,26 @@ button:disabled.loginButton{
     box-shadow: 1px 1px 3px black;
 }
 
-.userinput {
+.userinputsignup{
     background-color: rgb(201, 216, 236);
     box-sizing: border-box;
     width: 100%;
-    border: 3px black solid;
+    border: 2px black solid;
+    margin-top: 5px;
 }
 
+.text {
+    font-size: 14px;
+}
 
-button:enabled.loginButton {
+button:enabled.signupButton {
     width: 300px;
     background-color: #fd5c63;
     color: white;
-    box-shadow: 1px 1px 3px black;
+    box-shadow: 2px 2px 3px black;
     height: 50px;
+}
+
+button:hover {
+    cursor: pointer;
 }

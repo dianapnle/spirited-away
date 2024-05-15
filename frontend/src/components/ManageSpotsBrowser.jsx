@@ -51,12 +51,12 @@ function ManageSpotsBrowser () {
             <>
             <div>
             <SpotTile onClick={() => {navigate(`/spots/${spot.id}`)}} key={`${spot.id}`} spot={spot} />
-            <br></br>
             <div className={`buttons-area`}><span><button className={`update-button`} key={`update-${spot.id}`} onClick={() => {navigate(`/spots/${spot.id}/edit`)}}>Update</button>
-            <OpenModalButton modalComponent={<DeleteSpotModal spotId={spot.id}/>}/></span></div>
+            <OpenModalButton className={`delete-button`} modalComponent={<DeleteSpotModal spotId={spot.id}/>}/></span></div>
             </div>
             </>
         ))}
+
         </div>
         </div>
         </>

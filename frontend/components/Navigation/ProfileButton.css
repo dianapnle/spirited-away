@@ -15,14 +15,12 @@
 }
 
 .login-dropdown {
-    border: 1px solid black;
-    padding: 5px;
+
+    padding: 1px;
     border-top: none;
 }
 
 .signup-dropdown{
-    border: 1px solid black;
-    padding: 5px;
+    padding: 1px;
     border-bottom: none;
-
 }

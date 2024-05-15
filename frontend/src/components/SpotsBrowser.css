@@ -6,9 +6,9 @@
 
 .spotscontainer{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(max(300px, 23%), 1fr));
+    grid-template-columns: repeat(auto-fill, 350px);
     margin: 0 auto;
-    max-width: 80%;
+    max-width: 1430px;
     justify-content: center;
     grid-gap: 10px;
 }

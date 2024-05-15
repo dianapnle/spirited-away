@@ -72,7 +72,7 @@ function LoginFormModal () {
             </label>
             </div>
             <br></br>
-            <button className={`loginButton`}type="submit" disabled={toggle()}>Log In</button>
+            <button className={`loginButton`} type="submit" disabled={toggle()}>Log In</button>
             <br></br>
             <button className={`demouserbutton`} onClick={demoUser}>Demo User</button>
         </form>

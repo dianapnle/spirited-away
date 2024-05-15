@@ -1,4 +1,7 @@
 .form.login {
+    border-radius: 15px 15px 15px 15px;;
+    border: 5px solid rgb(255, 255, 255);
+    background: white;
     padding: 10px;
     height: 300px;
     width: 300px;
@@ -28,22 +31,25 @@ button:disabled.loginButton{
     background-color: rgb(201, 216, 236);
     box-sizing: border-box;
     width: 100%;
-    border: 3px black solid;
+    border: 2px black solid;
 }
 
+.text {
+    font-size: 14px;
+}
 
 .passwordinput {
     background-color: rgb(201, 216, 236);
     box-sizing: border-box;
     width: 100%;
-    border: 3px black solid;
+    border: 2px black solid;
 }
 
 button:enabled.loginButton {
     width: 300px;
     background-color: #fd5c63;
     color: white;
-    box-shadow: 1px 1px 3px black;
+    box-shadow: 2px 3px 5px black;
     height: 50px;
 }
 
@@ -52,6 +58,10 @@ button:enabled.demouserbutton {
     width: 300px;
     background-color: #fd5c63;
     color: white;
-    box-shadow: 1px 1px 3px black;
+    box-shadow: 2px 3px 5px black;
     height: 50px;
+}
+
+button:hover {
+    cursor: pointer;
 }

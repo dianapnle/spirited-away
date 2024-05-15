@@ -18,6 +18,14 @@ function SignupFormModal () {
     const { closeModal } = useModal();
 
 
+    const toggle = () => {
+      if (username.length < 4 || password.length < 6 || lastName.length === 0 || email.length === 0 || firstName.length === 0 || confirmPassword.length < 6) {
+        return true
+      }
+      return false
+    }
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (password === confirmPassword) {
@@ -34,12 +42,12 @@ function SignupFormModal () {
             .then(closeModal)
             .catch(async (res) => {
               const data = await res.json();
-              if (data?.errors) {
+              if (data && data.errors) {
+                console.log(data)
                 setErrors(data.errors);
               }
             });
         }
-
         return setErrors({
             confirmPassword: "Passwords do not match"
         })
@@ -47,40 +55,40 @@ function SignupFormModal () {
 
     return (
         <>
-        <div className={`form`}>
+        <div className={`form signup`}>
         <h1>Sign Up</h1>
+        {errors.email && <div className={`errors`}>{errors.email}</div>}
+        {errors.username && <div className={`errors`}>{errors.username}</div>}
         <form onSubmit={handleSubmit}>
           <div>
             <label>
             <input
+              className={`userinputsignup`}
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                required
                 placeholder='Username'
           />
             </label>
-            {errors.username && <p>{errors.username}</p>}
           </div>
             <div>
             <label>
             <input
+                className={`userinputsignup`}
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                required
                 placeholder='First Name'
           />
             </label>
-            {errors.firstName && <p>{errors.firstName}</p>}
             </div>
             <div>
             <label>
             <input
+                className={`userinputsignup`}
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                required
                 placeholder='Last Name'
           />
             </label>
@@ -89,40 +97,39 @@ function SignupFormModal () {
             <div>
             <label>
             <input
+                className={`userinputsignup`}
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
                 placeholder='Email'
             />
             </label>
-            {errors.email && <p>{errors.email}</p>}
             </div>
             <div>
             <label>
             <input
+                className={`userinputsignup`}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
                 placeholder='Password'
           />
             </label>
-            {errors.password && <p>{errors.password}</p>}
             </div>
             <div>
             <label>
             <input
+                className={`userinputsignup`}
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                required
                 placeholder='Confirm Password'
           />
             </label>
-            {errors.confirmPassword&& <p>{errors.confirmPassword}</p>}
+            {errors.confirmPassword && <div className={`errors`}>{errors.confirmPassword}</div>}
             </div>
-            <button type="submit">Continue</button>
+            <br></br>
+            <button className={`signupButton`} type="submit" disabled={toggle()}>Sign Up</button>
         </form>
         </div>
         </>

@@ -6,11 +6,6 @@
 }
 
 
-
-.spotitem {
-
-}
-
 .spotTileContainer{
     height: 360px;
 
@@ -49,11 +44,12 @@
 .update-button {
     display: inline-block;
     width: 100px;
-    background-color: #323232;
+    background-color: #8a8787;
     color: white;
     box-shadow: 1px 1px 4px black;
     width: fit-content;
     height: 30px;
+    margin-right: 10px;
 }
 
 .spotTileContainer {
@@ -70,7 +66,7 @@
 
 .create-spots-button {
     width: 100px;
-    background-color: #4b4949;
+    background-color: #8a8787;
     color: white;
     box-shadow: 1px 1px 4px black;
     width: fit-content;

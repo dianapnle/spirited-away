@@ -18,7 +18,7 @@
     height: 100px;
 }
 
-.submit-review-button {
+button:enabled.submit-review-button {
     display: inline-block;
     width: 100px;
     background-color: #fd5c63;
@@ -27,6 +27,14 @@
     width: 100%;
     height: 40px;
     box-sizing: border-box;
+}
+
+button:disabled.submit-review-button{
+    background-color: white;
+    color: rgb(131, 129, 129);
+    width: 100%;
+    height: 50px;
+    box-shadow: 1px 1px 3px black;
 }
 
 .star-area {

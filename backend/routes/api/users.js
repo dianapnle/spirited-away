@@ -17,9 +17,21 @@ const validateSignup = [
     check('email')
     .exists({ checkFalsy: true })
     .isEmail()
-    .withMessage('Invalid email.'),
+    .withMessage('The provided email is invalid.')
+    .custom(async value => {
+      const user = await User.findAll( {where: {email: value}})
+      if (user.length !== 0) {
+        throw new Error('Email must be unique');
+      }
+  }),
     //checks if req.body.username is a minimum length of 4 and is not an email
     check('username')
+    .custom(async value => {
+        const user = await User.findAll( {where: {username: value}} )
+        if (user.length !== 0) {
+          throw new Error('Username must be unique');
+        }
+    })
     .exists({ checkFalsy: true })
     .withMessage('Username required')
     .isLength({ min: 4 })
@@ -59,9 +71,9 @@ router.post('/', validateSignup, async (req, res) => {
 
       if (search.length !== 0) {
         const err = new Error()
-        err.message = "User already exists";
+        err.message = "Username must be unique";
         err.errors = {
-          username: "User with that username already exists"
+          username: "Username must be unique"
         };
         res.status(500);
         console.log(whereuser, search.length)
