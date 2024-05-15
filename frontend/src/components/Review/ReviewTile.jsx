@@ -15,14 +15,13 @@ function ReviewTile ({review, spotId}) {
     return (
         <>
         <div className={`reviewitem`}>
-        <div>
+        <br></br>
         <div className={`review-user`}>
             {review.User?.firstName}
         </div>
         <span className={`review-date`}>{monthNames[date.getMonth()]} {date.getFullYear()}</span>
         <p className={`review-body`}>{review?.review}</p>
         {sessionUser?.id === review.userId && <div><OpenModalButton modalComponent={<DeleteReviewModal reviewId={review.id} spotId={spotId}/>}/></div>}
-        </div>
         <br></br>
         </div>
         </>

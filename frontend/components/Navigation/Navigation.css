@@ -45,6 +45,8 @@
 .overall-block {
     display: flex;
     justify-content: space-between;
+    background-color: #dbffe6;
+    border-bottom: 3px rgb(88, 84, 42) solid;
 }
 
 .profile-area {
