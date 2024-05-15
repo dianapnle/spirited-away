@@ -46,7 +46,7 @@ function ManageSpotsBrowser () {
         <br></br>
         <br></br>
         <div className={`spotscontainer`}>
-        {filteredSpots.length === 0 && <div>No Spots Currently Owned! <div><button onClick={() => {navigate(`"/spots/new`)}} className={`create-spots-button`}>Create a New Spot</button></div></div>}
+        {filteredSpots.length === 0 && <div>No Spots Currently Owned! <div><button onClick={() => {navigate(`/spots/new`)}} className={`create-spots-button`}>Create a New Spot</button></div></div>}
         {Object.values(filteredSpots).map((spot) => (
             <>
             <div>
