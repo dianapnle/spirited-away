@@ -1,5 +1,7 @@
 # Spirited Get Away
 
+Click the following link: [Spirited Get Away](https://spiritedgetaway.onrender.com/)
+
 Spirited Get Away is a clone of the website Airbnb, an online market place that connects people who are looking for accomodations in a particular area with people who are renting out their properties. The backend of Spirited Get Away is built on sequelize with a PostgreSQL database. Frontend rendering is handled with React.
 ## How to clone
 
