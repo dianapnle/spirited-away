@@ -46,8 +46,34 @@ Spots are the core of Spirited Get Away. All functionalities center around them.
 Spots also have associations with spot images table. This table consists of
 `spotId, url, and preview`. The url is a link to an image url for the spot and the preview is a boolean of true or false whether or not it should be the representative image displayed.
 
-Spirited Get Away lets users create, read, update, and destroy spots. React components and functionalities have been implemented  for each corresponding action in the app. Information needed for all components or users actions are managed with redux states.
+Spirited Get Away lets users create, read, update, and destroy spots. React components and functionalities have been implemented for each corresponding action in the app. Information needed for all components or users actions are managed with redux states.
+
+Users can update the details of the spot that they own as well as delete it under a `manage your spots` link. The link has a list of spots that the user has made along with update or delete functionalities. Once an update or delete has been made:
+
+Update:
+1. An update spot form will appear with values pre-populated into the input boxes. Users can change details accordingly.
+2. When user clicks update, a call is made to the backend to update the details in the database. Then, the store receives the spot's updated details, and then re-renders to display the spot's details and all associated current reviews.
+
+Delete:
+1. A user can delete a spot with a click of a button. This delete button will prompt the user to reconfirm if the user wants to delete the spot or not.
+2. If no, the modal will close and the spot will remain under manage spots. If yes, there will be a call made to the backend to delete the spot. Once the store receives the changes in the user's spots, the manage spots browser will re-render and remove the spot that was just deleted and close the modal.
 
 ##### Reviews
 
-Spirited Get Away also lets users review other spots that they do not own. Posting a review is as easy as clicking a button that opens a modal with a text box for description and a star rating that adjusts with the hover of the user's mouse. Once a review has been made, the review is quickly added under the spot's details.
+Spirited Get Away also lets users review other spots that they do not own. Posting a review is as easy as clicking a button that opens a modal with a text box for description and a star rating that adjusts with the hover of the user's mouse.
+
+Example Create Review
+<img src="images/reviewexample.png" />
+
+Once a review has been made, the review is quickly added under the spot's details without refreshing. It is done by the following:
+
+1. After the review has been made, two calls are made to get the spot's details and current reviews corresponding to the spot.
+2. When the store receives the spot's updated details and reviews, it then re-renders to display the spot's details and all current reviews.
+
+#### New Features Queue
+
+Some features missing from this current app that will hopefully be implemented at a future date:
+
+- CRUD bookings
+- CRUD spot images and review images
+- Implementation of google maps API
