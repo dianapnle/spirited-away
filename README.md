@@ -15,9 +15,13 @@ in the directory where you want the new project to appear.
 
 ## How to install and run
 
-Once the repo is cloned, run
+Once the repo is cloned, to setup backend:
 
 `cd <new-project-name>`, then `cd backend && npm install` \
+`npx dotenv sequelize db:migrate`\
+`npx dotenv sequelize-cli db:seed:all`
+
+to setup frontend:
 `cd <new-project-name>` then `cd frontend && npm install`
 
 to install

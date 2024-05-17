@@ -46,7 +46,9 @@
 }
 
 .errors{
-    color: #fd5c63
+    color: #fd5c63;
+    font-size: 14px;
+    margin-top: -10px;
 }
 
 .description-box {

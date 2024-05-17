@@ -40,7 +40,6 @@ function ManageSpotsBrowser () {
         <div>
         <div className={`header`}>
         <h2>Manage Spots</h2>
-        {filteredSpots.length !== 0 && <div><button onClick={() => {navigate(`/spots/new`)}} className={`create-spots-button`}>Create a New Spot</button></div>}
         </div>
         <br></br>
         <br></br>
