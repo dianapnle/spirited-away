@@ -36,6 +36,7 @@
     box-sizing: border-box;
     background-color: rgb(201, 216, 236);
     border: 2px black solid;
+    margin-bottom: 10px;
 }
 .price-input-box {
     width: 485px;
@@ -55,4 +56,16 @@
     box-sizing: border-box;
     background-color: rgb(201, 216, 236);
     border: 2px black solid;
+}
+
+p {
+    font-size: 13px;
+}
+
+input {
+    font-size: 13px;
+}
+
+textarea {
+    font-size: 13px;
 }

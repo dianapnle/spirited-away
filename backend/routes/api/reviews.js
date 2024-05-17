@@ -20,7 +20,7 @@ async function dateConverter(value) {
 
   return `${currentYear}-${currentMonth}-${currentDay} ${currentHours}:${currentMinutes}:${currentSeconds}`;
 }
-// The validateSignup middleware is composed of the check and handleValidationErrors middleware
+// The validateReviewmiddleware is composed of the check and handleValidationErrors middleware
 //   If at least one of the req.body values fail the check, an error will be returned as the response.
 const validateReview = [
   //It checks to see if there is an address, etc

@@ -214,7 +214,7 @@ const CreateSpotForm = () => {
                     <h3>Describe your place to guests</h3>
                     <p>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood.</p>
                 <textarea
-                  placeholder='Description'
+                  placeholder='Please write at least 30 characters'
                   className="description-box"
                   value={description}
                   onChange={updateDescription}>
@@ -222,7 +222,7 @@ const CreateSpotForm = () => {
                   </label>
                   {hasSubmitted=== true && errors.description && <span className="errors">{errors.description}</span>}
                 <label>
-                    <h2>Create a title for your spot</h2>
+                    <h3>Create a title for your spot</h3>
                     <p>Catch guests&apos; attention with a spot title that highlights what makes your place special.</p>
                 <input
                   type="text"

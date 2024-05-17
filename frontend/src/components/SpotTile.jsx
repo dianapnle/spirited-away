@@ -21,7 +21,7 @@ function SpotTile ({spot}) {
                         <div className={`rating`}>★ {spot.avgRating?.toFixed(1)}</div>
                     </div>
                     <div className={`bottom-text`}>
-                    <div className={`price`}>${spot.price.toFixed(2)} </div>
+                    <div className={`price`}>${spot.price?.toFixed(2)} </div>
                     <div> night</div>
                     </div>
                 </div>
