@@ -87,7 +87,7 @@ function SpotDetail () {
             <div className={`reviews-star`}>
             {spot?.avgStarRating === null
                 ? <div>★ New</div>
-                : <span>★ {spot?.avgStarRating} · {spot?.numReviews === 1 ? <span>{spot?.numReviews} review</span> : <span> {spot?.numReviews} reviews</span> } </span>
+                : <span>★ {spot?.avgStarRating?.toFixed(1)} · {spot?.numReviews === 1 ? <span>{spot?.numReviews} review</span> : <span> {spot?.numReviews} reviews</span> } </span>
                 }
             </div>
             <br></br>
