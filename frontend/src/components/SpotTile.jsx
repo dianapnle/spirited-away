@@ -18,7 +18,10 @@ function SpotTile ({spot}) {
                 <div>
                     <div className={`top-text`}>
                         <div className={`location`}>{spot.city}, {spot.state}</div>
-                        <div className={`rating`}>★ {spot.avgRating?.toFixed(1)}</div>
+                        {spot.avgRating === 0.0
+                ? <div>★ New</div>
+                : <div className={`rating`}>★ {spot.avgRating?.toFixed(1)}</div>
+                }
                     </div>
                     <div className={`bottom-text`}>
                     <div className={`price`}>${spot.price?.toFixed(2)} </div>
