@@ -340,19 +340,20 @@ const validateSpot = [
       'lng', 'name', 'description', 'price'],
       include: [
         { model: SpotImage, attributes: ['url'], where: { preview: true}, required: false},
-        { model: Review, attributes: [], required: false }
     ],
-     attributes: {
-      include: [
-     [ Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating' ],
-    ]},
-      //separates the average to each spot not overall average otherwise:
       group: ['Spot.id','SpotImages.id']
     });
 
   const modifiedResult = []
   for (const entry of spots) {
    const modifiedEntry = entry.toJSON();
+   //find the sum stars and count of each spot using reviews
+   const sumStars = await Review.sum('stars', {
+     where: {spotId: entry.id}
+   })
+   const count = await Review.count({where: {spotId: entry.id}});
+   const average = sumStars/count;
+
    //if images for the spot exist then ->
    if (modifiedEntry.SpotImages.length !== 0) {
     // unbox first SpotImage as preview image, if available
@@ -361,6 +362,7 @@ const validateSpot = [
      modifiedEntry.price = Number(entry.price);
      modifiedEntry.createdAt = await dateConverter(entry.createdAt);
      modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
+     modifiedEntry.avgRating = average;
      modifiedResult.push(modifiedEntry);
    } else if (modifiedEntry.SpotImages.length === 0){
        // always remove SpotImages implementation detail from user
@@ -368,6 +370,7 @@ const validateSpot = [
    modifiedEntry.createdAt = await dateConverter(entry.createdAt);
    modifiedEntry.updatedAt = await dateConverter(entry.updatedAt);
    modifiedEntry.price = Number(entry.price);
+   modifiedEntry.avgRating = average;
    modifiedResult.push(modifiedEntry)}
 }
     return res.json({
