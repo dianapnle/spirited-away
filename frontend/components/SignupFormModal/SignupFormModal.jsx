@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as sessionActions from '../../src/store/session';
 import { useDispatch} from 'react-redux';
 import { useModal } from '../../src/context/Modal';
@@ -16,7 +16,7 @@ function SignupFormModal () {
     const [ confirmPassword, setConfirmPassword ] = useState("");
     const [ errors, setErrors ] = useState({});
     const { closeModal } = useModal();
-
+    const [hasSubmitted, setHasSubmitted] = useState(false)
 
     const toggle = () => {
       if (username.length < 4 || password.length < 6 || lastName.length === 0 || email.length === 0 || firstName.length === 0 || confirmPassword.length < 6) {
@@ -25,11 +25,24 @@ function SignupFormModal () {
       return false
     }
 
+    useEffect(() => {
+      const errors = {};
+
+      if (!email.includes(`@`)) errors.email = 'Invalid email';
+      if (password !== confirmPassword) errors.matchPassword = 'Passwords do not match'
+      setErrors(errors)
+
+    }, [email, password, confirmPassword])
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (password === confirmPassword) {
-          setErrors({});
+        setHasSubmitted(true);
+
+        if (Object.values(errors).length) {
+          return
+        }
+
+        if (Object.values(errors).length === 0) {
           return dispatch(
             sessionActions.signup({
               email,
@@ -48,27 +61,27 @@ function SignupFormModal () {
               }
             });
         }
-        return setErrors({
-            confirmPassword: "Passwords do not match"
-        })
+        setErrors({});
+        setHasSubmitted(false)
     };
 
     return (
         <>
         <div className={`form signup`}>
         <h1>Sign Up</h1>
-        {errors.email && <div className={`errors`}>{errors.email}</div>}
-        {errors.username && <div className={`errors`}>{errors.username}</div>}
         <form onSubmit={handleSubmit}>
           <div>
+          {hasSubmitted===true && errors.email && <div className={`errors`}>{errors.email}</div>}
+          <br></br>
+          {hasSubmitted===true && errors.matchPassword && <div className={`errors`}>{errors.matchPassword}</div>}
             <label>
             <input
               className={`userinputsignup`}
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder='Username'
-          />
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder='Username'
+              />
             </label>
           </div>
             <div>
@@ -92,7 +105,6 @@ function SignupFormModal () {
                 placeholder='Last Name'
           />
             </label>
-            {errors.lastName && <p>{errors.lastName}</p>}
             </div>
             <div>
             <label>
@@ -126,8 +138,7 @@ function SignupFormModal () {
                 placeholder='Confirm Password'
           />
             </label>
-            {errors.confirmPassword && <div className={`errors`}>{errors.confirmPassword}</div>}
-            </div>
+              </div>
             <br></br>
             <button className={`signupButton`} type="submit" disabled={toggle()}>Sign Up</button>
         </form>
