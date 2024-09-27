@@ -1,73 +1,73 @@
 .form-container {
-    display: flex;
-    margin: auto;
-    width: 500px;
+  display: flex;
+  margin: auto;
+  width: 500px;
 }
 
 .create-spot-button {
-    display: inline-block;
-    width: 100px;
-    background-color: #fd5c63;
-    color: white;
-    box-shadow: 2px 3px 5px black;
-    width: fit-content;
-    height: 30px;
-    margin-bottom: 30px;
+  display: inline-block;
+  width: 100px;
+  background-color: #fd5c63;
+  color: white;
+  box-shadow: 2px 3px 5px black;
+  width: fit-content;
+  height: 30px;
+  margin-bottom: 30px;
 }
 
 .update-spot-button {
-    display: inline-block;
-    width: 100px;
-    background-color: #fd5c63;
-    color: white;
-    box-shadow: 2px 3px 5px black;
-    width: fit-content;
-    height: 30px;
-    margin-bottom: 30px;
+  display: inline-block;
+  width: 100px;
+  background-color: #fd5c63;
+  color: white;
+  box-shadow: 2px 3px 5px black;
+  width: fit-content;
+  height: 30px;
+  margin-bottom: 30px;
 }
 
-.input-container{
-    display: flex;
-    justify-content: center;
+.input-container {
+  display: flex;
+  justify-content: center;
 }
 
-.input-box{
-    width: 500px;
-    box-sizing: border-box;
-    background-color: rgb(201, 216, 236);
-    border: 2px black solid;
-    margin-bottom: 10px;
+.input-box {
+  width: 500px;
+  box-sizing: border-box;
+  background-color: rgb(201, 216, 236);
+  border: 2px black solid;
+  margin-bottom: 10px;
 }
 .price-input-box {
-    width: 485px;
-    box-sizing: border-box;
-    background-color: rgb(201, 216, 236);
-    border: 2px black solid;
+  width: 485px;
+  box-sizing: border-box;
+  background-color: rgb(201, 216, 236);
+  border: 2px black solid;
 }
 
-.errors{
-    color: #fd5c63;
-    font-size: 14px;
-    margin-top: -10px;
+.errors {
+  color: #fd5c63;
+  font-size: 14px;
+  margin-top: -10px;
 }
 
 .description-box {
-    display:flex;
-    width: 500px;
-    height: 100px;
-    box-sizing: border-box;
-    background-color: rgb(201, 216, 236);
-    border: 2px black solid;
+  display: flex;
+  width: 500px;
+  height: 100px;
+  box-sizing: border-box;
+  background-color: rgb(201, 216, 236);
+  border: 2px black solid;
 }
 
 p {
-    font-size: 13px;
+  font-size: 13px;
 }
 
 input {
-    font-size: 13px;
+  font-size: 13px;
 }
 
 textarea {
-    font-size: 13px;
+  font-size: 13px;
 }

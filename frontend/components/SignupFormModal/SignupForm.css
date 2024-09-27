@@ -1,50 +1,50 @@
 .form.signup {
-    border-radius: 15px 15px 15px 15px;;
-    border: 5px solid rgb(255, 255, 255);
-    background: white;
-    padding: 10px;
-    height: 350px;
-    width: 300px;
-    display: block;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    text-align: center;
+  border-radius: 15px 15px 15px 15px;
+  border: 5px solid rgb(255, 255, 255);
+  background: white;
+  padding: 10px;
+  height: 350px;
+  width: 300px;
+  display: block;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
 }
 
 .errors {
-    margin-top: 10px;
-    color: #fd5c63;
+  margin-top: 10px;
+  color: #fd5c63;
 }
 
-button:disabled.signupButton{
-    background-color: white;
-    color: rgb(131, 129, 129);
-    width: 100%;
-    height: 50px;
-    box-shadow: 1px 1px 3px black;
+button:disabled.signupButton {
+  background-color: white;
+  color: rgb(131, 129, 129);
+  width: 100%;
+  height: 50px;
+  box-shadow: 1px 1px 3px black;
 }
 
-.userinputsignup{
-    background-color: rgb(201, 216, 236);
-    box-sizing: border-box;
-    width: 100%;
-    border: 2px black solid;
-    margin-top: 5px;
+.userinputsignup {
+  background-color: rgb(201, 216, 236);
+  box-sizing: border-box;
+  width: 100%;
+  border: 2px black solid;
+  margin-top: 5px;
 }
 
 .text {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 button:enabled.signupButton {
-    width: 300px;
-    background-color: #fd5c63;
-    color: white;
-    box-shadow: 2px 2px 3px black;
-    height: 50px;
+  width: 300px;
+  background-color: #fd5c63;
+  color: white;
+  box-shadow: 2px 2px 3px black;
+  height: 50px;
 }
 
 button:hover {
-    cursor: pointer;
+  cursor: pointer;
 }

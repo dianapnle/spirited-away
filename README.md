@@ -3,6 +3,7 @@
 Click the following link: [Spirited Get Away](https://spirited-away.onrender.com/)
 
 Spirited Get Away is a clone of the website Airbnb, an online market place that connects people who are looking for accomodations in a particular area with people who are renting out their properties. The backend of Spirited Get Away is built on SQL, sequelize, and express with a PostgreSQL database. Frontend rendering is handled with React and Redux.
+
 ## How to clone
 
 To clone this repo as `<new-project-name>`, run
@@ -57,10 +58,12 @@ Spirited Get Away lets users create, read, update, and destroy spots. React comp
 Users can update the details of the spot that they own as well as delete it under a `manage your spots` link. The link has a list of spots that the user has made along with update or delete functionalities. Once an update or delete has been made:
 
 Update:
+
 1. An update spot form will appear with values pre-populated into the input boxes. Users can change details accordingly.
 2. When user clicks update, a call is made to the backend to update the details in the database. Then, the store receives the spot's updated details, and then re-renders to display the spot's details and all associated current reviews.
 
 Delete:
+
 1. A user can delete a spot with a click of a button. This delete button will prompt the user to reconfirm if the user wants to delete the spot or not.
 2. If no, the modal will close and the spot will remain under manage spots. If yes, there will be a call made to the backend to delete the spot. Once the store receives the changes in the user's spots, the manage spots browser will re-render and remove the spot that was just deleted and close the modal.
 

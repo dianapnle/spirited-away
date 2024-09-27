@@ -1,16 +1,16 @@
-'use strict';
+"use strict";
 
-const { Model, Validator } = require('sequelize');
+const { Model, Validator } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       // define association here
-      User.hasMany(models.Spot, {foreignKey: "ownerId", as: "Owner"});
-      User.hasMany(models.Review, {foreignKey: "userId"});
-      User.hasMany(models.Booking, {foreignKey: "userId"});
+      User.hasMany(models.Spot, { foreignKey: "ownerId", as: "Owner" });
+      User.hasMany(models.Review, { foreignKey: "userId" });
+      User.hasMany(models.Booking, { foreignKey: "userId" });
     }
-  };
+  }
 
   User.init(
     {
@@ -25,22 +25,22 @@ module.exports = (sequelize, DataTypes) => {
             if (Validator.isEmail(value)) {
               throw new Error("Cannot be an email.");
             }
-          }
-        }
+          },
+        },
       },
       firstName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isAlpha: true
-        }
+          isAlpha: true,
+        },
       },
       lastName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isAlpha: true
-        }
+          isAlpha: true,
+        },
       },
       email: {
         type: DataTypes.STRING,
@@ -49,28 +49,29 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           //email must be between 3 to 256 characters
           len: [3, 256],
-          isEmail: true
-        }
+          isEmail: true,
+        },
       },
       hashedPassword: {
         type: DataTypes.STRING.BINARY,
         allowNull: false,
         validate: {
           //require 60 characters
-          len: [60, 60]
-        }
-      }
-    }, {
+          len: [60, 60],
+        },
+      },
+    },
+    {
       sequelize,
-      modelName: 'User',
+      modelName: "User",
       defaultScope: {
         attributes: {
           //exclude these attributes
-          exclude: ["hashedPassword", "email", "createdAt", "updatedAt"]
-        }
+          exclude: ["hashedPassword", "email", "createdAt", "updatedAt"],
+        },
       },
-      validate: true
-    }
+      validate: true,
+    },
   );
   return User;
 };

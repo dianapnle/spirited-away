@@ -1,103 +1,97 @@
-
 .hidden {
-    display: none
+  display: none;
 }
-
 
 .profile-button {
-    border-radius: 25px;
-    border: 1px solid rgb(167, 159, 159);
-    background: white;
-    padding: 10px;
-    width: 60px;
-    height: 20px;
+  border-radius: 25px;
+  border: 1px solid rgb(167, 159, 159);
+  background: white;
+  padding: 10px;
+  width: 60px;
+  height: 20px;
 }
 
-
 .menu-icons {
-    display: flex;
-    justify-content: center;
-    width: 60px;
-    height: 20px;
-    background: white;
-    border: white;
+  display: flex;
+  justify-content: center;
+  width: 60px;
+  height: 20px;
+  background: white;
+  border: white;
 }
 
 .both-icons {
-    display: inline;
-    width: 60px;
-    background: white;
+  display: inline;
+  width: 60px;
+  background: white;
 }
 
-
 .menu {
-    display: inline;
-    float: left;
-    background: white;
+  display: inline;
+  float: left;
+  background: white;
 }
 
 .profile {
-    display: inline;
-    float: right;
-    background: white;
+  display: inline;
+  float: right;
+  background: white;
 }
 
 .overall-block {
-    display: flex;
-    justify-content: space-between;
-    background-color: #dbffe6;
-    border-bottom: 3px rgb(88, 84, 42) solid;
+  display: flex;
+  justify-content: space-between;
+  background-color: #dbffe6;
+  border-bottom: 3px rgb(88, 84, 42) solid;
 }
 
 .profile-area {
-    display: inline-flex;
+  display: inline-flex;
 }
 
 .createspotlink {
-    align-content: center;
+  align-content: center;
 }
 
 .ulClassName {
-    display: block;
+  display: block;
 }
 
-
-.profileButtonBox{
-    margin-right: 30px;
-    justify-self: flex-end;
-    position: relative;
-
+.profileButtonBox {
+  margin-right: 30px;
+  justify-self: flex-end;
+  position: relative;
 }
 
 .profileButtonList {
-    position: absolute;
-    background: white;
-    width: 150px;
-    right: 0.3%;
-    z-index: 1;
-    border: 1px solid black;
-    text-align: center;
-    padding: 10px;
+  position: absolute;
+  background: white;
+  width: 150px;
+  right: 0.3%;
+  z-index: 1;
+  border: 1px solid black;
+  text-align: center;
+  padding: 10px;
 }
 
 .home-block {
-    margin: 10px;
+  margin: 10px;
 }
 
 .profile-block {
-    margin: 10px;
+  margin: 10px;
 }
 
-.logout-button{
-    border-radius: 25px;
-    border: 2px solid rgb(13, 13, 13);
-    background: rgb(130, 128, 128);
-    width: 80px;
-    height: 30px;
-    color: white;
+.logout-button {
+  border-radius: 25px;
+  border: 2px solid rgb(13, 13, 13);
+  background: rgb(130, 128, 128);
+  width: 80px;
+  height: 30px;
+  color: white;
 }
 
 .dropdown:hover {
-    background-color: #F0F0F0;
-    cursor: pointer;
+  background-color: #f0f0f0;
+  cursor: pointer;
 }

@@ -1,6 +1,6 @@
 // import React from 'react';
-import { useModal } from '../../context/Modal'
-import './DeleteSpotModal.css'
+import { useModal } from "../../context/Modal";
+import "./DeleteSpotModal.css";
 
 function OpenModalButton({
   modalComponent, // component to render inside the modal
@@ -12,7 +12,9 @@ function OpenModalButton({
   };
 
   return (
-        <button className={`delete-button`} onClick={onClick}>Delete</button>
+    <button className={`delete-button`} onClick={onClick}>
+      Delete
+    </button>
   );
 }
 

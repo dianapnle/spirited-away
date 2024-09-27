@@ -1,57 +1,54 @@
-
 .spotsimg {
-    width: 100%;
-    height: 248px;
+  width: 100%;
+  height: 248px;
 }
 
-.spotscontainer{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 350px);
-    margin: 0 auto;
-    max-width: 1430px;
-    justify-content: center;
-    grid-gap: 10px;
+.spotscontainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 350px);
+  margin: 0 auto;
+  max-width: 1430px;
+  justify-content: center;
+  grid-gap: 10px;
 }
 
 .spotitem {
-
 }
 
-.spotTileContainer{
-    height: 360px;
+.spotTileContainer {
+  height: 360px;
 }
 
 .child {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .update-button {
-    display: inline-block;
-    width: 100px;
-    background-color: #323232;
-    color: white;
-    box-shadow: 1px 1px 4px black;
-    width: fit-content;
-    height: 30px;
+  display: inline-block;
+  width: 100px;
+  background-color: #323232;
+  color: white;
+  box-shadow: 1px 1px 4px black;
+  width: fit-content;
+  height: 30px;
 }
 
 .buttons-area {
-
 }
 
-.header{
-    display: inline-block;
-    justify-content: start;
-    max-width: 1000px;
-    padding-left: 90px;
+.header {
+  display: inline-block;
+  justify-content: start;
+  max-width: 1000px;
+  padding-left: 90px;
 }
 
 .create-spots-button {
-    width: 100px;
-    background-color: #4b4949;
-    color: white;
-    box-shadow: 1px 1px 4px black;
-    width: fit-content;
-    height: 30px;
+  width: 100px;
+  background-color: #4b4949;
+  color: white;
+  box-shadow: 1px 1px 4px black;
+  width: fit-content;
+  height: 30px;
 }

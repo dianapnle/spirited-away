@@ -1,30 +1,29 @@
-import { createBrowserRouter, RouterProvider, Outlet} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import * as sessionActions from "./store/session";
-import Navigation from '../components/Navigation/Navigation'
+import Navigation from "../components/Navigation/Navigation";
 import SpotsBrowser from "./components/SpotsBrowser";
-import SpotDetail from "./components/SpotDetail"
+import SpotDetail from "./components/SpotDetail";
 import CreateSpotForm from "./components/CreateSpot";
 import ManageSpotsBrowser from "./components/ManageSpotsBrowser";
 
-function Layout () {
+function Layout() {
   const dispatch = useDispatch();
-  const [ isLoaded, setIsLoaded ] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-
-   useEffect(() => {
+  useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
-      setIsLoaded(true)
-    })
-   }, [dispatch])
+      setIsLoaded(true);
+    });
+  }, [dispatch]);
 
-   return (
+  return (
     <>
-    <Navigation isLoaded={isLoaded} />
-    {isLoaded && <Outlet />}
+      <Navigation isLoaded={isLoaded} />
+      {isLoaded && <Outlet />}
     </>
-   )
+  );
 }
 import EditSpotForm from "./components/EditSpot";
 
@@ -33,27 +32,27 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: '/',
-        element: <SpotsBrowser />
+        path: "/",
+        element: <SpotsBrowser />,
       },
       {
         path: "spots/:spotId",
-        element: <SpotDetail />
+        element: <SpotDetail />,
       },
       {
         path: "spots/new",
-        element: <CreateSpotForm />
+        element: <CreateSpotForm />,
       },
       {
         path: "spots/current",
-        element: <ManageSpotsBrowser />
+        element: <ManageSpotsBrowser />,
       },
       {
         path: "spots/:id/edit",
-        element: <EditSpotForm />
-      }
-    ]
-  }
+        element: <EditSpotForm />,
+      },
+    ],
+  },
 ]);
 
 function App() {

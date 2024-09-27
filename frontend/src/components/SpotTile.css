@@ -1,86 +1,83 @@
-
 .spotsimg {
-    width: 100%;
-    height: 248px;
-    border: 2px solid black;
-}
-
-
-.spotTileContainer{
-    height: 360px;
-
-}
-
-.child {
-    display: flex;
-    justify-content: center;
-}
-
-.location{
-    font-size: 15px;
-}
-
-.rating {
-    font-size: 15px
-}
-
-.top-text {
-    width: 100%;
-    display: inline-flex;
-    justify-content: space-between;
-}
-
-.price {
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.bottom-text {
-    width: 100%;
-    display: inline-flex;
-    gap: 2px;
-}
-
-.update-button {
-    display: inline-block;
-    width: 100px;
-    background-color: #8a8787;
-    color: white;
-    box-shadow: 1px 1px 4px black;
-    width: fit-content;
-    height: 30px;
-    margin-right: 10px;
+  width: 100%;
+  height: 248px;
+  border: 2px solid black;
 }
 
 .spotTileContainer {
-    cursor: pointer;
-    height: 320px
+  height: 360px;
 }
 
-.header{
-    display: inline-block;
-    justify-content: start;
-    max-width: 1000px;
-    padding-left: 90px;
+.child {
+  display: flex;
+  justify-content: center;
+}
+
+.location {
+  font-size: 15px;
+}
+
+.rating {
+  font-size: 15px;
+}
+
+.top-text {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+.price {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.bottom-text {
+  width: 100%;
+  display: inline-flex;
+  gap: 2px;
+}
+
+.update-button {
+  display: inline-block;
+  width: 100px;
+  background-color: #8a8787;
+  color: white;
+  box-shadow: 1px 1px 4px black;
+  width: fit-content;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.spotTileContainer {
+  cursor: pointer;
+  height: 320px;
+}
+
+.header {
+  display: inline-block;
+  justify-content: start;
+  max-width: 1000px;
+  padding-left: 90px;
 }
 
 .create-spots-button {
-    width: 100px;
-    background-color: #8a8787;
-    color: white;
-    box-shadow: 1px 1px 4px black;
-    width: fit-content;
-    height: 30px;
+  width: 100px;
+  background-color: #8a8787;
+  color: white;
+  box-shadow: 1px 1px 4px black;
+  width: fit-content;
+  height: 30px;
 }
 
 .tooltip:hover:before {
-    display:block;
-    content: attr(data-text); /* here's the magic */
-    position:absolute;
-    width: 100px;
-    padding: 5px;
-    border-radius:10px;
-    background:#000;
-    color: #fff;
-    text-align:center;
-  }
+  display: block;
+  content: attr(data-text); /* here's the magic */
+  position: absolute;
+  width: 100px;
+  padding: 5px;
+  border-radius: 10px;
+  background: #000;
+  color: #fff;
+  text-align: center;
+}

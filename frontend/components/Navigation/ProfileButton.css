@@ -1,26 +1,25 @@
 .menu-items:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .both-icons:hover {
-    cursor: pointer;
-}
-
-.login-dropdown{
-    cursor: pointer
-}
-
-.signup-dropdown{
-    cursor: pointer
+  cursor: pointer;
 }
 
 .login-dropdown {
-
-    padding: 1px;
-    border-top: none;
+  cursor: pointer;
 }
 
-.signup-dropdown{
-    padding: 1px;
-    border-bottom: none;
+.signup-dropdown {
+  cursor: pointer;
+}
+
+.login-dropdown {
+  padding: 1px;
+  border-top: none;
+}
+
+.signup-dropdown {
+  padding: 1px;
+  border-bottom: none;
 }

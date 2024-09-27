@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Review extends Model {
     /**
@@ -10,36 +8,39 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Review.belongsTo(models.Spot, {foreignKey: "spotId"});
-      Review.belongsTo(models.User, {foreignKey: "userId"});
-      Review.hasMany(models.ReviewImage, {foreignKey: "reviewId"});
+      Review.belongsTo(models.Spot, { foreignKey: "spotId" });
+      Review.belongsTo(models.User, { foreignKey: "userId" });
+      Review.hasMany(models.ReviewImage, { foreignKey: "reviewId" });
     }
   }
-  Review.init({
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+  Review.init(
+    {
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      spotId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      review: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      stars: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          min: { args: 1, msg: "Stars must be an integer from 1 to 5" },
+          max: { args: 5, msg: "Stars must be an integer from 1 to 5" },
+        },
+      },
     },
-    spotId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+    {
+      sequelize,
+      modelName: "Review",
+      validate: true,
     },
-    review: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    stars: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: {args: 1, msg: "Stars must be an integer from 1 to 5"},
-        max: {args: 5, msg: 'Stars must be an integer from 1 to 5'}
-      }
-    }
-  }, {
-    sequelize,
-    modelName: 'Review',
-    validate: true
-  });
+  );
   return Review;
 };
